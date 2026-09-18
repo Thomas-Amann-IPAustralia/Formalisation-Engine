@@ -6,7 +6,9 @@ reconstruction_mode: framework   # backbone | framework
 consuming_agent: ux-designer
 
 objectives:
-  active: ["page-structure"]     # M1 thin slice (OQ-01); widen after the contract holds
+  active: ["page-structure"]     # M1 thin slice, confirmed in ADR-0002; widen once the
+                                 # contract holds. Chosen because it has both cheap probes
+                                 # and a real judgement point (EL-heading-describes).
 
 corpus:
   snapshot_path: snapshots/style-manual-wcag/TODO
@@ -64,7 +66,10 @@ tool:
     judgement_cost_cap_per_package_day: TODO
     decision_log_sink: var/decision-log/style-manual-wcag.jsonl
 
-triage:                          # FR-TRI-01, OQ-02
+triage:                          # FR-TRI-01; thresholds confirmed in ADR-0002
+  # Auto-approve only when every signal below is good. Anything less is queued, and a
+  # queued record still compiles and is served as provisional, so a large queue costs
+  # review attention, never availability. Tuned against gold in M4 (OQ-02).
   auto_approve:
     extraction_confidence: high
     interpretation_confidence: high

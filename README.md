@@ -67,11 +67,12 @@ Not yet built: everything in `src/engine/` beyond the CLI stub. M0 is the IR mod
 checks and the gold slice. M1 hand-builds an IR and compiles a package before any pipeline code, so
 the tool contract is tested while it is still cheap to change.
 
-Known gaps, in rough priority order:
+All three ADRs are Accepted, so M1 has an objective (page structure and headings), a conflict
+policy and triage thresholds. Known gaps, in rough priority order:
 
-- ADR-0002 is unanswered: the M1 topic, the tie-breaking policy and the review thresholds.
 - `domain_config.yaml` still has TODOs for source pins, a licence note, cost caps and the
   vocabulary seed.
+- CI has a dependency scan but no secret scan; NFR-SEC-01 asks for both.
 - Skills and agents are drafts, tuned after real use rather than before it.
 - The Bash guard is a tripwire, not a boundary: it does not stop a shell write to a protected
   path, only the `Edit` and `Write` tools do. See `docs/STATUS.md`.

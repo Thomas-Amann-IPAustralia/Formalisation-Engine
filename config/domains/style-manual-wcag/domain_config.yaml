@@ -77,14 +77,18 @@ triage:                          # FR-TRI-01, OQ-02
     - low_confidence_on_active_objective
   vocabulary_confirm_threshold: 0.9
 
+# Model IDs by role (ADR-0003). One model for every inference role to start with; move a
+# single role to a bigger model if it misses its gold target, rather than moving all of them.
 models:
-  extraction: TODO
-  classification: TODO
-  panel: [TODO, TODO]
-  critic: TODO
-  judgement: TODO                # OQ-03
-  inference: TODO
-  embedding: TODO                # ADR-0003
+  extraction: gemini-2.5-flash
+  classification: gemini-2.5-flash
+  # One model, three different prompts. Measure the disagreement rate on gold in M4; if the
+  # members agree almost always, the panel is not doing its job and needs a second family.
+  panel: [gemini-2.5-flash, gemini-2.5-flash, gemini-2.5-flash]
+  critic: gemini-2.5-flash
+  judgement: gemini-2.5-flash
+  inference: gemini-2.5-flash
+  embedding: nomic-ai/nomic-embed-text-v1.5    # self-hosted; 768 dims
 
 llm:
   default_mode: replay

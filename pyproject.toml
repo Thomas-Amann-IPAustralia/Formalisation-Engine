@@ -5,7 +5,9 @@ description = "Policy and Process Formalisation Engine: pilot"
 requires-python = ">=3.12"
 # Versions are pinned by uv.lock. Add or change dependencies with `uv add`, not by hand.
 dependencies = [
-    "anthropic",
+    # LLM provider SDK, used only behind engine.llm (NFR-PRT-01). Model IDs live in
+    # config/domains/<domain>/domain_config.yaml, never here (ADR-0003).
+    "google-genai",
     "pydantic>=2",
     "pyyaml",
     "typer",
@@ -18,10 +20,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Office and PDF ingestion (ADR-0017). Heavy; install when M1 needs it.
+# Office and PDF ingestion (ADR-0001): Docling, run locally. Heavy; install when M2 needs it.
 office = ["docling"]
-# Local embeddings (ADR-0013). Only if the ADR chooses a local model.
-embeddings-local = ["sentence-transformers"]
+# Local embeddings (ADR-0003): nomic-ai/nomic-embed-text-v1.5, self-hosted.
+# einops is required because that model loads with trust_remote_code.
+embeddings-local = ["sentence-transformers", "einops"]
 
 [project.scripts]
 engine = "engine.cli:app"

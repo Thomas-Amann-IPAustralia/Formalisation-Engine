@@ -37,13 +37,14 @@ spec appendix, not paraphrased), and the input block. Put source text inside
 
 ## Rules
 
-- Output is always structured: tool use with a JSON Schema generated from `output_model`. Never
-  parse free text.
+- Output is always structured: a JSON Schema generated from `output_model`, passed to the model as
+  a response schema. Never parse free text.
 - Classification prompts list the allowed labels and ask for a short rationale (DP-06).
 - Few-shot examples live in `prompts/<stage>/examples/` and come from the synthetic corpus, never
   from the gold-standard material they will be scored against.
 - Put the stable part of the prompt (instructions, definitions) first so prompt caching applies.
 - No model names, API parameters or retry logic in templates; those belong in config and `engine.llm`.
-- For Anthropic API specifics (structured outputs, prompt caching, Batch API), use the bundled
-  `/claude-api` skill rather than memory.
+- The provider is the Gemini API, `gemini-2.5-flash` for every inference role (ADR-0003). Structured
+  output, context caching and batching are Gemini's, not Anthropic's; the bundled `/claude-api`
+  skill does not apply to this project. Check the current Gemini API docs rather than memory.
 - A new version needs an evaluation run before it becomes the default (NFR-MNT-01).

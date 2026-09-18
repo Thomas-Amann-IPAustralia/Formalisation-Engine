@@ -1,0 +1,39 @@
+# Cue lists (spec Appendix B, FR-EXT-03, FR-EXT-04), adjusted for standards drafting.
+schema_version: "1.0"
+
+normative_force:
+  MUST: ["must", "is required to", "is to"]
+  MUST_NOT: ["must not", "is not to", "is prohibited from"]
+  SHOULD: ["should", "is expected to", "ought to", "it is good practice to"]
+  SHOULD_NOT: ["should not", "should avoid"]
+  MAY: ["may", "is permitted to", "is authorised to", "has power to"]
+  CAN: ["can", "is able to"]
+  DEFINITIONAL: ["means", "includes", "does not include", "is taken to be", "is to be treated as", "for the purposes of", "is defined as"]
+  DESCRIPTIVE: ["generally", "usually", "typically"]
+  EXPLANATORY: ["the purpose of", "this is because", "in order to", "background"]
+  EXAMPLE: ["for example", "e.g.", "such as"]
+
+# Cues that always send a proposition to review, with the force they most likely signal.
+flag_for_review:
+  shall: MUST                  # older drafting
+  "may not": MUST_NOT          # prohibition or absence of permission
+  "success criterion": MUST    # WCAG success criteria are normative even when phrased as statements
+  "sufficient technique": MAY  # a technique is one way to meet a criterion, not the only way
+  "advisory technique": SHOULD
+  "failure": MUST_NOT          # WCAG failure descriptions state what does not conform
+  "level a": MUST              # conformance levels change what applies, not whether it is normative
+  "level aa": MUST
+  "level aaa": MAY             # AAA is outside the pilot's conformance target
+
+# Open-textured standards: classify as EVALUATIVE_JUDGEMENT whatever the modal verb (FR-EXT-03).
+evaluative_standards: ["reasonable", "satisfied that", "in the opinion of", "special circumstances", "appropriate", "sufficient", "having regard to", "clear", "plain", "meaningful", "describes", "easy to understand", "where possible", "as needed", "suitable"]
+
+# Condition and exception cues (FR-EXT-04).
+condition_cues: ["if", "where", "unless", "except", "subject to", "despite", "other than"]
+
+# Passage types that fix the force regardless of wording (Appendix B, precedence rule 2).
+passage_type_force:
+  note: EXPLANATORY
+  example: EXAMPLE
+  understanding: EXPLANATORY   # WCAG Understanding pages explain, they do not add requirements
+  technique: MAY               # techniques are sufficient ways to meet a criterion

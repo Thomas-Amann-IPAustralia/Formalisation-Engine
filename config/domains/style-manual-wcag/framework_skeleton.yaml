@@ -1,0 +1,38 @@
+# Framework skeleton (spec 4). Normally proposed by the Engine (FR-SKL-02). This seed is hand-built
+# for the M1 slice, so it is marked edited and only re-proposed as a diff (FR-CFG-02).
+schema_version: "1.0"
+skeleton_id: SKEL-ux-standards
+version: 1
+mode: framework
+origin: edited
+
+objectives:
+  - element_id: EL-page-structure
+    kind: objective
+    label: Page structure and headings
+    question: "Does this page's structure and heading use meet WCAG 2.2 AA and the Style Manual?"
+    status: confirmed
+    children:
+      - element_id: EL-headings-marked-up
+        kind: requirement_group
+        label: Headings exist and are marked up as headings
+        expected_sources: [DOC-WCAG-22, DOC-ACT-RULES, DOC-STYLE-MANUAL]
+        status: confirmed
+      - element_id: EL-heading-order
+        kind: requirement_group
+        label: Heading levels are used in order
+        selection_facts: [heading_levels_skipped]
+        expected_sources: [DOC-WCAG-22, DOC-STYLE-MANUAL]
+        status: confirmed
+      - element_id: EL-heading-describes
+        kind: judgement
+        label: Headings describe the content that follows
+        selection_facts: [heading_describes_section]
+        expected_sources: [DOC-WCAG-22, DOC-STYLE-MANUAL]
+        status: confirmed
+        notes: "Judgement procedure at run time; caller may override."
+      - element_id: EL-heading-check
+        kind: check
+        label: How to test heading structure
+        expected_sources: [DOC-ACT-RULES]
+        status: confirmed

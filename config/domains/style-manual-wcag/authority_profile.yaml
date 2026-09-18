@@ -1,0 +1,13 @@
+# Authority profile (spec 4, FR-AUT-01). Rank describes conflicts here and does not resolve them.
+schema_version: "1.0"
+corpus_kind: standard
+resolves_conflicts: false
+levels:
+  - { key: normative_specification, label: WCAG success criteria and conformance requirements, document_types: [standard], rank: 1 }
+  - { key: test_rules, label: ACT test rules, document_types: [test_rule], rank: 2 }
+  - { key: understanding_techniques, label: WCAG Understanding and Techniques, document_types: [technique], rank: 3 }
+  - { key: style_manual, label: Australian Government Style Manual, document_types: [guidance], rank: 3 }
+  - { key: example, label: Examples, document_types: [], rank: 4 }
+notes:
+  - "WCAG and the Style Manual are equal-ranked where both speak to the same thing."
+  - "A technique is one sufficient way to meet a criterion; it never overrides the criterion."

@@ -1,0 +1,1 @@
+Three or four short fictional documents for fast unit tests (spec Appendix A style): a backbone procedure, a standard with an exception, a guide with "should" language, one with a conflicting threshold. Tom writes these in M0.

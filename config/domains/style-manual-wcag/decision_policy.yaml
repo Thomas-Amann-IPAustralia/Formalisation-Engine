@@ -1,0 +1,25 @@
+# Decision policies (spec 4, FR-CFL-02, DP-10). Draft for M0 (OQ-01).
+# Every invocation is written to the decision log with policy, inputs, decision and rationale.
+schema_version: "1.0"
+policies:
+  - policy_id: POL-ux-stricter-wins
+    scope: [conflicts, alternatives]
+    kind: risk_matrix
+    applies_when: "both sources are equal-ranked and both bear on the same requirement"
+    definition:
+      axes:
+        impact_on_users: [low, moderate, high]
+        effort_to_fix: [low, moderate, high]
+      rule: "choose the option that satisfies the stricter requirement, unless impact_on_users is low and effort_to_fix is high, in which case choose the less strict option and record the trade-off"
+      inputs_from:
+        impact_on_users: judgement     # a judgement procedure estimates it when not supplied
+        effort_to_fix: caller
+    hooks: [policy.invoked, policy.tradeoff_recorded]
+
+  - policy_id: POL-ux-conservative-default
+    scope: [judgement_defaults]
+    kind: conservative
+    applies_when: "no_inference mode, or the judgement budget is exhausted"
+    definition:
+      ordering: [not_satisfied, undetermined, satisfied]   # most conservative first
+    hooks: [policy.default_applied]

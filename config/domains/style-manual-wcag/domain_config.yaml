@@ -1,0 +1,112 @@
+# Pilot domain (FR-CFG-01). TODO values are filled in M0.
+schema_version: "1.0"
+domain: style-manual-wcag
+corpus_kind: standard            # policy | standard | methodology
+reconstruction_mode: framework   # backbone | framework
+consuming_agent: ux-designer
+
+objectives:
+  active: ["page-structure"]     # M1 thin slice (OQ-01); widen after the contract holds
+
+corpus:
+  snapshot_path: snapshots/style-manual-wcag/TODO
+  documents:
+    - document_id: DOC-WCAG-22
+      title: Web Content Accessibility Guidelines 2.2
+      document_type: standard
+      authority_level: normative_specification
+      source_kind: repository
+      source_uri: https://github.com/w3c/wcag
+      source_ref: TODO-commit
+      include_patterns: ["guidelines/**/*.html", "understanding/**/*.html"]
+      licence_class: store
+      licence_note: "W3C Document Licence; attribution required"
+      required: true
+    - document_id: DOC-ACT-RULES
+      title: ACT accessibility test rules
+      document_type: test_rule
+      authority_level: test_rules
+      source_kind: repository
+      source_uri: TODO
+      source_ref: TODO
+      licence_class: store
+      licence_note: TODO
+      required: false
+    - document_id: DOC-STYLE-MANUAL
+      title: Australian Government Style Manual
+      document_type: guidance
+      authority_level: style_manual
+      source_kind: web
+      source_uri: https://www.stylemanual.gov.au/
+      licence_class: store
+      licence_note: "Creative Commons; confirm version and attribution wording"
+      required: true
+
+# Proposed by the Engine (FR-SKL); editable (FR-CFG-02).
+skeleton: config/domains/style-manual-wcag/framework_skeleton.yaml
+fact_schema: config/domains/style-manual-wcag/fact_schema.yaml
+fact_providers: config/domains/style-manual-wcag/fact_providers.yaml
+authority_profile: config/domains/style-manual-wcag/authority_profile.yaml
+decision_policies: config/domains/style-manual-wcag/decision_policy.yaml
+cue_lists: config/domains/style-manual-wcag/cue_lists.yaml
+vocabulary:
+  seed: TODO   # export of the Octavius style manual rulebook
+
+tool:
+  tool_id: ux-standards
+  contract_version: "1.0"
+  surfaces: [python, mcp, cli]
+  package_path: tool/style-manual-wcag
+  run_time:
+    max_probe_cost_default: cheap
+    inference_allowed: true
+    judgement_cost_cap_per_call: TODO
+    judgement_cost_cap_per_package_day: TODO
+    decision_log_sink: var/decision-log/style-manual-wcag.jsonl
+
+triage:                          # FR-TRI-01, OQ-02
+  auto_approve:
+    extraction_confidence: high
+    interpretation_confidence: high
+    guards_agree: true
+    consistency: [consistent, qualified, resolved_by_policy]
+    temporal: [current]
+  queue_when:
+    - structural_proposal
+    - resolved_by_weak_policy
+    - low_confidence_on_active_objective
+  vocabulary_confirm_threshold: 0.9
+
+models:
+  extraction: TODO
+  classification: TODO
+  panel: [TODO, TODO]
+  critic: TODO
+  judgement: TODO                # OQ-03
+  inference: TODO
+  embedding: TODO                # ADR-0003
+
+llm:
+  default_mode: replay
+  max_schema_retries: 2
+  batch: true
+
+cost:
+  currency: USD
+  run_ceiling: TODO
+
+loops:
+  gap_max_iterations: 3
+  gap_max_retrieval_calls: 10
+  run_max_retrieval_calls: 500
+  skeleton_reproposal_iterations: 1
+
+retrieval:
+  rrf_k: 60
+  embedding_similarity_threshold: TODO
+
+mapping:
+  no_relation_reproposal_threshold: 0.25
+
+segmentation:
+  max_passage_chars: 4000

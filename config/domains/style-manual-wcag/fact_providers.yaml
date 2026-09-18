@@ -1,0 +1,10 @@
+# Probe registry bindings (spec 4, FR-PRB-03).
+schema_version: "1.0"
+probes:
+  - probe_id: PRB-html-heading-outline
+    implementation: engine.probes.html.heading_outline
+    computes: [FACT-heading_levels_skipped, FACT-heading_case]
+    artefact_kind: html
+    preconditions: ["artefact parses as HTML"]
+    cost: cheap
+    abstain_reasons: [artefact_not_parseable, no_headings_found]

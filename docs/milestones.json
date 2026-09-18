@@ -1,0 +1,10 @@
+{
+  "_note": "Milestones (spec section 8) to requirement IDs; first match wins. Tom owns this file.",
+  "M0": { "name": "Contract and models", "include": ["FR-CFG-*", "FR-EVL-01", "NFR-MNT-01", "NFR-INT-01", "INV-*"] },
+  "M1": { "name": "Thin slice", "include": ["FR-QRY-*", "FR-JDG-*", "FR-TOO-*", "G2", "G7", "G9"] },
+  "M2": { "name": "Ingest and extract", "include": ["FR-ING-*", "FR-SEG-*", "FR-EXT-*", "FR-OPS-*", "NFR-DET-*", "NFR-CST-*", "NFR-REL-*", "NFR-SAF-02", "NFR-PRT-01", "NFR-SEC-01", "G6", "G11"] },
+  "M3": { "name": "Vocabulary and skeleton", "include": ["FR-VOC-*", "FR-RET-*", "FR-SKL-*", "FR-MAP-*"] },
+  "M4": { "name": "Reconcile, resolve, triage", "include": ["FR-REC-*", "FR-CFL-*", "FR-GAP-*", "FR-TMP-*", "FR-AUT-*", "FR-EPI-*", "FR-TRI-*", "FR-REV-*", "G4", "G12"] },
+  "M5": { "name": "Probes, judgement, compile", "include": ["FR-PRB-*", "FR-CMP-*", "FR-VAL-*", "NFR-SAF-*", "NFR-TST-*", "NFR-PRF-*", "G1", "G3", "G8", "G10"] },
+  "M6": { "name": "Change and evaluation", "include": ["FR-CHG-*", "FR-EVL-*", "FR-PRV-*", "NFR-*", "G5"] }
+}

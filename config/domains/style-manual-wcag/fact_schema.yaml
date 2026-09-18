@@ -1,0 +1,39 @@
+# Fact schema (spec 4). Normally proposed by the Engine (FR-SKL-03). Seed for the M1 slice.
+schema_version: "1.0"
+fact_types:
+  - fact_type_id: FACT-heading_levels_skipped
+    name: heading_levels_skipped
+    data_type: number
+    providers: [probe]
+    probe_id: PRB-html-heading-outline
+    artefact_kind: html
+    allow_inference: false
+    obtained_from: "Computed from the page's heading outline"
+    origin: edited
+  - fact_type_id: FACT-heading_case
+    name: heading_case
+    data_type: enum
+    allowed_values: [sentence, title, mixed, unknown]
+    providers: [probe]
+    probe_id: PRB-html-heading-outline
+    artefact_kind: html
+    allow_inference: false
+    obtained_from: "Computed from heading text"
+    origin: edited
+  - fact_type_id: FACT-heading_describes_section
+    name: heading_describes_section
+    data_type: boolean
+    providers: [caller, inferred]
+    artefact_kind: html
+    allow_inference: true
+    obtained_from: "Caller supplies it, else inferred from headings and their sections"
+    origin: edited
+  - fact_type_id: FACT-audience
+    name: audience
+    data_type: enum
+    allowed_values: [general_public, specialist, internal]
+    providers: [caller]
+    artefact_kind: none
+    allow_inference: false
+    obtained_from: "The caller states the intended audience"
+    origin: edited

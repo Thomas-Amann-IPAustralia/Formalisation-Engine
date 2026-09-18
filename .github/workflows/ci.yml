@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    env:
+      ENGINE_LLM_MODE: replay
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install
+        run: uv sync --locked
+
+      - name: Generated spec files are current
+        run: python3 scripts/spec_tools.py build --check
+
+      - name: Lint and format
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Type check
+        run: uv run mypy src
+
+      - name: Tests (replay mode, no network calls to LLM APIs)
+        run: uv run pytest --tb=short
+
+      - name: Requirement coverage summary
+        run: python3 scripts/spec_tools.py coverage --summary >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Dependency audit
+        run: |
+          uv export --format requirements-txt --no-hashes --no-emit-project > "$RUNNER_TEMP/requirements.txt"
+          uvx pip-audit -r "$RUNNER_TEMP/requirements.txt"

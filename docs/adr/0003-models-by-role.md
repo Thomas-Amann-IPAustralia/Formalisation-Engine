@@ -52,9 +52,18 @@ sentence is now stale and only Tom can edit `spec-src/`.
 
 - `google-genai` replaces `anthropic` in `pyproject.toml`. The provider abstraction in
   `engine.llm` must keep the vendor SDK behind it (NFR-PRT-01), so a later swap is one adapter.
-- The API key is read from `ENGINE_GEMINI_API_KEY` only, never from `GOOGLE_API_KEY` or
+- The API key is read from `FORMAL_ENGINE_GEMINI` only, never from `GOOGLE_API_KEY` or
   `GEMINI_API_KEY`: the Google SDK reads those from the ambient environment by itself, which would
-  let a live call happen without the run being in live mode.
+  let a live call happen without the run being in live mode. The same name is set as a repository
+  secret on GitHub, so it means the same thing locally and in Actions. Langfuse uses its own SDK
+  names (`LANGFUSE_SECRET_KEY` secret; `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_BASE_URL` variables),
+  which is the ambient-pickup pattern this bullet warns against; it is accepted there because the
+  worst case is a trace written to the wrong project, not a paid model call.
+
+  This risk is not new to Gemini. The `anthropic` SDK reads `ANTHROPIC_API_KEY` the same way, and
+  the starter kit already guarded against it by prefixing the name. Two things did change: the
+  Google SDK reads two names rather than one, and `GOOGLE_API_KEY` is generic enough to be set for
+  an unrelated Google service, so the chance of an accidental collision is higher.
 - Any model change is a prompt-set change and triggers re-evaluation (NFR-PRT-01).
 - `nomic-embed-text-v1.5` loads with `trust_remote_code`, so `einops` is in the extra and the
   model revision should be pinned when M3 wires retrieval up: remote code at an unpinned revision

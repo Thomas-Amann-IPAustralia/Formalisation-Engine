@@ -906,10 +906,8 @@ dependencies = [
     { name = "networkx" },
     { name = "pydantic" },
     { name = "pyyaml" },
-    { name = "spacy" },
     { name = "typer" },
     { name = "uvicorn" },
-    { name = "z3-solver" },
 ]
 
 [package.optional-dependencies]
@@ -917,8 +915,14 @@ embeddings-local = [
     { name = "einops" },
     { name = "sentence-transformers" },
 ]
+nlp = [
+    { name = "spacy" },
+]
 office = [
     { name = "docling" },
+]
+solver = [
+    { name = "z3-solver" },
 ]
 
 [package.dev-dependencies]
@@ -941,12 +945,12 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2" },
     { name = "pyyaml" },
     { name = "sentence-transformers", marker = "extra == 'embeddings-local'" },
-    { name = "spacy" },
+    { name = "spacy", marker = "extra == 'nlp'" },
     { name = "typer" },
     { name = "uvicorn" },
-    { name = "z3-solver" },
+    { name = "z3-solver", marker = "extra == 'solver'" },
 ]
-provides-extras = ["office", "embeddings-local"]
+provides-extras = ["solver", "nlp", "office", "embeddings-local"]
 
 [package.metadata.requires-dev]
 dev = [

@@ -30,6 +30,6 @@ exception. Runs replay from cache and resume from the last completed stage (FR-O
 - All LLM calls go through `engine.llm` (cache keyed on model, prompt ID and version, canonical
   inputs; replay is the default; live and record refuse without `ENGINE_ALLOW_LIVE_LLM=1` in the
   process environment; provider is the Gemini API per ADR-0003, with the key read from
-  `ENGINE_GEMINI_API_KEY` only, never from the SDK's own `GOOGLE_API_KEY` or `GEMINI_API_KEY`,
+  `FORMAL_ENGINE_GEMINI` only, never from the SDK's own `GOOGLE_API_KEY` or `GEMINI_API_KEY`,
   which it would pick up from the ambient environment). Prompts are versioned files in
   `prompts/<stage>/<name>.v<N>.md`; a used version is never edited, only succeeded.

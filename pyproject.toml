@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Policy and Process Formalisation Engine: pilot"
 requires-python = ">=3.12"
 # Versions are pinned by uv.lock. Add or change dependencies with `uv add`, not by hand.
+# Base install: everything the pipeline needs up to M4, and nothing large. About 180 MB.
+# The two heavyweights live in extras below, so M0 to M2 do not carry them.
 dependencies = [
     # LLM provider SDK, used only behind engine.llm (NFR-PRT-01). Model IDs live in
     # config/domains/<domain>/domain_config.yaml, never here (ADR-0003).
@@ -11,19 +13,28 @@ dependencies = [
     "pydantic>=2",
     "pyyaml",
     "typer",
-    "networkx",
-    "z3-solver",
-    "spacy",
-    "fastapi",
+    "networkx",     # graph checks in compile and validate (M5); 8 MB
+    "fastapi",      # review interface and MCP server (M4); ~1 MB with uvicorn
     "uvicorn",
-    "langfuse",
+    "langfuse",     # evaluation traces (M6); 5 MB
 ]
 
 [project.optional-dependencies]
-# Office and PDF ingestion (ADR-0001): Docling, run locally. Heavy; install when M2 needs it.
+# Kept out of the base install by size. Sizes are measured, not estimated.
+
+# Satisfiability and rule-overlap checks in S-validate (FR-VAL-01). 49 MB. Needed from M5.
+solver = ["z3-solver"]
+
+# Linguistic analysis for segmentation and vocabulary (FR-SEG, FR-VOC). 230 MB with its
+# numpy, blis and thinc chain, which is over half the old base install. Needed from M2.
+# A language model still has to be downloaded separately; pin it when M2 wires this up.
+nlp = ["spacy"]
+
+# Office and PDF ingestion (ADR-0001): Docling, run locally. Pulls torch. Needed from M2.
 office = ["docling"]
-# Local embeddings (ADR-0003): nomic-ai/nomic-embed-text-v1.5, self-hosted.
-# einops is required because that model loads with trust_remote_code.
+
+# Local embeddings (ADR-0003): nomic-ai/nomic-embed-text-v1.5, self-hosted. Pulls torch.
+# einops is required because that model loads with trust_remote_code. Needed from M3.
 embeddings-local = ["sentence-transformers", "einops"]
 
 [project.scripts]

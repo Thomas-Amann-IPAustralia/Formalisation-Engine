@@ -14,8 +14,8 @@ Prerequisites: git, [uv](https://docs.astral.sh/uv/), `jq`, and `pyright` on PAT
 `pyright-lsp` plugin. uv installs Python 3.12 itself.
 
 ```sh
-uv sync                      # base install, about 460 MB
-cp .env.example .env         # then fill in ENGINE_GEMINI_API_KEY
+uv sync                      # base install, about 170 MB
+cp .env.example .env         # then fill in FORMAL_ENGINE_GEMINI
 uv run pytest -m fast -x     # should pass
 ```
 
@@ -26,12 +26,18 @@ Then start Claude Code and check `/hooks`, `/skills` and `/permissions`. If `/ho
 running, confirm the hook scripts are still executable (`ls -l .claude/hooks/`); they are committed
 mode 755 and are inert without it.
 
-Two extras are deliberately not in the base install, because both pull in torch:
+Four extras are deliberately not in the base install, all of them large. Add each when its
+milestone needs it:
 
 ```sh
-uv sync --extra office             # Docling, for DOCX and PDF ingestion (M2)
-uv sync --extra embeddings-local   # nomic-embed-text-v1.5, for retrieval (M3)
+uv sync --extra nlp                # spacy, for segmentation and vocabulary (M2); 230 MB
+uv sync --extra office             # Docling, for DOCX and PDF ingestion (M2); pulls torch
+uv sync --extra embeddings-local   # nomic-embed-text-v1.5, for retrieval (M3); pulls torch
+uv sync --extra solver             # z3-solver, for rule-overlap checks (M5); 49 MB
 ```
+
+CI installs the base only, and caches uv's downloads against `uv.lock`. When an M5 test needs Z3,
+add `--extra solver` to the install step.
 
 ## Layout
 
@@ -72,7 +78,7 @@ policy and triage thresholds. Known gaps, in rough priority order:
 
 - `domain_config.yaml` still has TODOs for source pins, a licence note, cost caps and the
   vocabulary seed.
-- CI has a dependency scan but no secret scan; NFR-SEC-01 asks for both.
+- Two edits in `docs/adr/0004-no-push-block.md` are waiting on Tom; Claude cannot make them.
 - Skills and agents are drafts, tuned after real use rather than before it.
-- The Bash guard is a tripwire, not a boundary: it does not stop a shell write to a protected
-  path, only the `Edit` and `Write` tools do. See `docs/STATUS.md`.
+- The secret scan reads the working tree, not git history, so a secret committed and later
+  removed would not be caught. See `docs/STATUS.md`.

@@ -71,6 +71,33 @@ that git can restore, and Tom's preference is fewer blocks, not more.
   answer. It still does not push to `main`, and still does not open a pull request unasked.
 - The guard is now three rules about irreversible damage. If Tom wants the remaining ones gone,
   each is a contiguous block of four lines in `guard-bash.sh`.
+- **Force-pushing to `main` is no longer blocked by anything local.** The old rule did block it,
+  though only against carelessness: a push written with an explicit repository path always got
+  through. The control that actually holds is a branch protection rule on `main` in the GitHub
+  repository settings (require a pull request, block force-pushes), because it is server-side,
+  applies to every actor rather than only to Claude, and cannot be evaded by rephrasing a command.
+  Worth setting up; it is not done yet.
+
+### Verified before Tom applies it
+
+Edits 1 and 2 were applied to a scratch copy of the hook and 23 commands were run through it. All
+23 behaved as intended.
+
+- Still blocked, live and record: an assignment of either variable, an `export` of one, both
+  variables together, and `--llm-mode live` or `--llm-mode=record`. `ENGINE_LLM_MODE=replay` stays
+  allowed.
+- Still blocked, pip: `pip install`, `pip3 install`, `python -m pip install`, and the same under
+  `uv run`.
+- Still blocked, recursive delete: `gold/`, `spec-src`, `tests/fixtures/llm_cache`, `docs/spec`. A
+  non-recursive delete outside a protected path stays allowed.
+- Now allowed, which is the point: pushing, and naming the live-run variables in a `grep` or in
+  prose.
+- `bash -n` passes on the patched hook, and `settings.json` after edit 3 is still valid JSON with
+  its other twelve deny entries intact.
+
+One residue: a command whose text contains a literal `ENGINE_ALLOW_LIVE_LLM=1`, such as a heredoc
+writing documentation about it, is still blocked. Harmless, since a file written through the
+`Write` tool is not matched at all.
 
 ## The edits Claude could not make
 

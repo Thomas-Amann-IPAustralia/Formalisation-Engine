@@ -37,7 +37,13 @@ Updated: 2026-09-19
   deny to allow in `settings.json`, and drop "never push" from `CLAUDE.md` line 71 and from step 8
   of the `implement-req` skill. Claude is blocked from editing its own permission files and its own
   instructions by a harness-level check, which is working as intended. Until they are applied the
-  hook still refuses pushes and the written rules still say not to.
+  hook still refuses pushes and the written rules still say not to. The edits were tested on a
+  scratch copy first: the live-run, pip and recursive-delete rules all still fire, and only the
+  push rule stops. Evidence is in the ADR.
+- **Branch protection on `main`.** Removing the push block means nothing local stops a force-push
+  to `main` any more. The old rule only stopped a careless one anyway. A branch protection rule in
+  the GitHub settings (require a pull request, block force-pushes) is the control that actually
+  holds, because it applies server-side to every actor. Five minutes in Settings then Branches.
 - **The stale spec sentence.** Section 2 describes the stack as "Anthropic API behind a provider
   abstraction"; ADR-0003 changed that to Gemini. Claude's attempt to read `spec-src/` was refused
   by the permission layer, so this one is yours. Suggested replacement for that clause: "a model

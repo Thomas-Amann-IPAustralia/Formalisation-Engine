@@ -1,0 +1,188 @@
+{
+  "$defs": {
+    "ArtefactInput": {
+      "additionalProperties": false,
+      "description": "An artefact the caller offers for probing.",
+      "properties": {
+        "kind": {
+          "minLength": 1,
+          "title": "Kind",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "ArtefactInput",
+      "type": "object"
+    },
+    "CallerFact": {
+      "additionalProperties": false,
+      "description": "A fact the caller supplies.",
+      "properties": {
+        "source": {
+          "const": "caller",
+          "default": "caller",
+          "title": "Source",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "title": "CallerFact",
+      "type": "object"
+    },
+    "CallerOverride": {
+      "additionalProperties": false,
+      "description": "A value the caller insists on. Overrides win and show as `overridden` (FR-JDG-04).",
+      "properties": {
+        "by": {
+          "minLength": 1,
+          "title": "By",
+          "type": "string"
+        },
+        "source": {
+          "const": "override",
+          "default": "override",
+          "title": "Source",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "by"
+      ],
+      "title": "CallerOverride",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "ProbeCost": {
+      "description": "Spec section 4. Expensive probes are opt-in (FR-PRB-02).",
+      "enum": [
+        "trivial",
+        "cheap",
+        "expensive"
+      ],
+      "title": "ProbeCost",
+      "type": "string"
+    },
+    "RequestMode": {
+      "description": "Appendix E `options.mode` (FR-TOO-04).",
+      "enum": [
+        "answer",
+        "plan"
+      ],
+      "title": "RequestMode",
+      "type": "string"
+    },
+    "RequestOptions": {
+      "additionalProperties": false,
+      "description": "FR-TOO-04: the tool honours all four.",
+      "properties": {
+        "as_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "As At"
+        },
+        "max_probe_cost": {
+          "$ref": "#/$defs/ProbeCost",
+          "default": "cheap"
+        },
+        "mode": {
+          "$ref": "#/$defs/RequestMode",
+          "default": "answer"
+        },
+        "no_inference": {
+          "default": false,
+          "title": "No Inference",
+          "type": "boolean"
+        }
+      },
+      "title": "RequestOptions",
+      "type": "object"
+    }
+  },
+  "$id": "https://formalisation.engine/schema/contract/1.0/request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Appendix E request. Facts and overrides are keyed by fact type name.",
+  "properties": {
+    "artefacts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ArtefactInput"
+      },
+      "title": "Artefacts",
+      "type": "array"
+    },
+    "contract_version": {
+      "default": "1.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "facts": {
+      "additionalProperties": {
+        "$ref": "#/$defs/CallerFact"
+      },
+      "title": "Facts",
+      "type": "object"
+    },
+    "objective": {
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "options": {
+      "$ref": "#/$defs/RequestOptions"
+    },
+    "overrides": {
+      "additionalProperties": {
+        "$ref": "#/$defs/CallerOverride"
+      },
+      "title": "Overrides",
+      "type": "object"
+    }
+  },
+  "required": [
+    "objective"
+  ],
+  "title": "Formalisation Engine tool request",
+  "type": "object"
+}

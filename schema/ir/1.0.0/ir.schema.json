@@ -1,0 +1,3528 @@
+{
+  "$defs": {
+    "AllOf": {
+      "additionalProperties": false,
+      "description": "Every operand must hold.",
+      "properties": {
+        "op": {
+          "const": "all_of",
+          "default": "all_of",
+          "title": "Op",
+          "type": "string"
+        },
+        "operands": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "all_of": "#/$defs/AllOf",
+                "any_of": "#/$defs/AnyOf",
+                "fact": "#/$defs/FactCondition",
+                "not": "#/$defs/NotCondition"
+              },
+              "propertyName": "op"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/FactCondition"
+              },
+              {
+                "$ref": "#/$defs/AllOf"
+              },
+              {
+                "$ref": "#/$defs/AnyOf"
+              },
+              {
+                "$ref": "#/$defs/NotCondition"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Operands",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operands"
+      ],
+      "title": "AllOf",
+      "type": "object"
+    },
+    "Alternative": {
+      "additionalProperties": false,
+      "description": "One supportable position on a question, where no policy chose between them\n(FR-CFL-03).",
+      "properties": {
+        "conditions": {
+          "minLength": 1,
+          "title": "Conditions",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "proposition_ids": {
+          "items": {
+            "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Proposition Ids",
+          "type": "array"
+        },
+        "source_documents": {
+          "default": [],
+          "items": {
+            "pattern": "^DOC-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Source Documents",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "proposition_ids",
+        "conditions"
+      ],
+      "title": "Alternative",
+      "type": "object"
+    },
+    "Anchor": {
+      "additionalProperties": false,
+      "description": "Where a passage sits in its document. Every anchor resolves to one location\n(FR-SEG-01).",
+      "properties": {
+        "list_path": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "List Path",
+          "type": "array"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "paragraph": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Paragraph"
+        },
+        "section": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section"
+        },
+        "table_cell": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Table Cell"
+        }
+      },
+      "title": "Anchor",
+      "type": "object"
+    },
+    "AnyOf": {
+      "additionalProperties": false,
+      "description": "At least one operand must hold.",
+      "properties": {
+        "op": {
+          "const": "any_of",
+          "default": "any_of",
+          "title": "Op",
+          "type": "string"
+        },
+        "operands": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "all_of": "#/$defs/AllOf",
+                "any_of": "#/$defs/AnyOf",
+                "fact": "#/$defs/FactCondition",
+                "not": "#/$defs/NotCondition"
+              },
+              "propertyName": "op"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/FactCondition"
+              },
+              {
+                "$ref": "#/$defs/AllOf"
+              },
+              {
+                "$ref": "#/$defs/AnyOf"
+              },
+              {
+                "$ref": "#/$defs/NotCondition"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Operands",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operands"
+      ],
+      "title": "AnyOf",
+      "type": "object"
+    },
+    "AuthorityLevel": {
+      "additionalProperties": false,
+      "description": "One level in the profile. Two levels may share a rank, which makes them equal-ranked.",
+      "properties": {
+        "document_types": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Document Types",
+          "type": "array"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "rank": {
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "rank"
+      ],
+      "title": "AuthorityLevel",
+      "type": "object"
+    },
+    "AuthorityOrderDefinition": {
+      "additionalProperties": false,
+      "description": "Rank decides, highest first. Only meaningful where the profile resolves conflicts.",
+      "properties": {
+        "kind": {
+          "const": "authority_order",
+          "default": "authority_order",
+          "title": "Kind",
+          "type": "string"
+        },
+        "order": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Order",
+          "type": "array"
+        }
+      },
+      "required": [
+        "order"
+      ],
+      "title": "AuthorityOrderDefinition",
+      "type": "object"
+    },
+    "AuthorityProfile": {
+      "additionalProperties": false,
+      "description": "The ordered levels a domain's documents sit in (FR-AUT-01).\n\n`resolves_conflicts` is what turns rank from description into policy. The pilot leaves it\nfalse, so WCAG and the Style Manual stay equal and a conflict between them falls through to\nthe risk matrix.",
+      "properties": {
+        "corpus_kind": {
+          "$ref": "#/$defs/CorpusKind"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "levels": {
+          "items": {
+            "$ref": "#/$defs/AuthorityLevel"
+          },
+          "minItems": 1,
+          "title": "Levels",
+          "type": "array"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "resolves_conflicts": {
+          "default": false,
+          "title": "Resolves Conflicts",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "corpus_kind",
+        "levels"
+      ],
+      "title": "AuthorityProfile",
+      "type": "object"
+    },
+    "BackboneMapping": {
+      "additionalProperties": false,
+      "description": "A proposition mapped to a step, in backbone-led mode (Appendix C.1).",
+      "properties": {
+        "element_id": {
+          "pattern": "^EL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "method": {
+          "$ref": "#/$defs/RelationMethod"
+        },
+        "mode": {
+          "const": "backbone",
+          "default": "backbone",
+          "title": "Mode",
+          "type": "string"
+        },
+        "proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Proposition Id",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "relation": {
+          "$ref": "#/$defs/BackboneRelation"
+        }
+      },
+      "required": [
+        "proposition_id",
+        "element_id",
+        "relation",
+        "rationale",
+        "method"
+      ],
+      "title": "BackboneMapping",
+      "type": "object"
+    },
+    "BackboneRelation": {
+      "description": "Appendix C.1. Proposition to step, in backbone-led mode.",
+      "enum": [
+        "elaborates_step",
+        "introduces_step",
+        "introduces_decision",
+        "introduces_prerequisite",
+        "introduces_exception",
+        "introduces_alternative_pathway",
+        "defines_term",
+        "specifies_authority",
+        "specifies_evidence",
+        "modifies_rule",
+        "contradicts",
+        "establishes_dependency",
+        "context_only",
+        "no_relation"
+      ],
+      "title": "BackboneRelation",
+      "type": "string"
+    },
+    "Conclusion": {
+      "additionalProperties": false,
+      "description": "What a rule concludes. A DEFINITIONAL proposition compiles to a fact derivation, which\nis a rule whose conclusion sets a fact (FR-CMP-01).",
+      "properties": {
+        "derived_value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "derives_fact_type_id": {
+          "anyOf": [
+            {
+              "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Derives Fact Type Id"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "title": "Conclusion",
+      "type": "object"
+    },
+    "Condition": {
+      "additionalProperties": false,
+      "description": "A condition a proposition attaches to its obligation (FR-EXT-04).\n\n`fact_type_id` is None until a fact type exists for it; a rule compiled from such a\ncondition is provisional until one is confirmed (FR-CMP-02), and INV-05 refuses a rule\nwhose condition has no fact type with a provider.",
+      "properties": {
+        "fact_type_id": {
+          "anyOf": [
+            {
+              "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Type Id"
+        },
+        "negated": {
+          "default": false,
+          "title": "Negated",
+          "type": "boolean"
+        },
+        "operator": {
+          "$ref": "#/$defs/ConditionOperator"
+        },
+        "raw_text": {
+          "minLength": 1,
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "raw_text",
+        "operator"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "ConditionOperator": {
+      "description": "The comparisons a rule condition may make against a fact value.",
+      "enum": [
+        "eq",
+        "ne",
+        "lt",
+        "lte",
+        "gt",
+        "gte",
+        "in",
+        "not_in",
+        "contains",
+        "matches",
+        "exists"
+      ],
+      "title": "ConditionOperator",
+      "type": "string"
+    },
+    "ConfidenceBand": {
+      "description": "A banded confidence. Bands, not raw probabilities, because a model's self-reported\nprobability is never the sole input to a status (FR-EPI-01).",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unknown"
+      ],
+      "title": "ConfidenceBand",
+      "type": "string"
+    },
+    "Conflict": {
+      "additionalProperties": false,
+      "description": "Two or more propositions that cannot both be followed (FR-CFL-01).",
+      "properties": {
+        "alternatives": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Alternative"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "conflict_id": {
+          "pattern": "^CFL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Conflict Id",
+          "type": "string"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "kind": {
+          "$ref": "#/$defs/ConflictKind"
+        },
+        "panel_votes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Panel Votes",
+          "type": "array"
+        },
+        "proposition_ids": {
+          "items": {
+            "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Proposition Ids",
+          "type": "array"
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        },
+        "status": {
+          "$ref": "#/$defs/ConflictStatus",
+          "default": "open"
+        }
+      },
+      "required": [
+        "conflict_id",
+        "kind",
+        "proposition_ids"
+      ],
+      "title": "Conflict",
+      "type": "object"
+    },
+    "ConflictKind": {
+      "description": "FR-CFL-01 detects the first four deterministically; FR-VOC-02 raises terminology.",
+      "enum": [
+        "numeric",
+        "date",
+        "responsibility",
+        "sequence",
+        "terminology",
+        "other"
+      ],
+      "title": "ConflictKind",
+      "type": "string"
+    },
+    "ConflictStatus": {
+      "description": "Where a conflict has got to (spec section 4).",
+      "enum": [
+        "open",
+        "resolved",
+        "alternatives",
+        "overridden"
+      ],
+      "title": "ConflictStatus",
+      "type": "string"
+    },
+    "ConservativeDefinition": {
+      "additionalProperties": false,
+      "description": "An ordering, most conservative first, used when inference is off or budget is spent.",
+      "properties": {
+        "kind": {
+          "const": "conservative",
+          "default": "conservative",
+          "title": "Kind",
+          "type": "string"
+        },
+        "ordering": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Ordering",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ordering"
+      ],
+      "title": "ConservativeDefinition",
+      "type": "object"
+    },
+    "Consideration": {
+      "additionalProperties": false,
+      "description": "One thing the procedure weighs, and the proposition it comes from.\n\nSpec section 4 says considerations are \"each sourced\", so the source is required: a\njudgement that weighs something no passage supports is the tool adding content (FR-TOO-03).",
+      "properties": {
+        "source_proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Source Proposition Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "source_proposition_id"
+      ],
+      "title": "Consideration",
+      "type": "object"
+    },
+    "ConsistencyState": {
+      "description": "Spec section 4, one dimension of epistemic status.",
+      "enum": [
+        "consistent",
+        "qualified",
+        "resolved_by_policy",
+        "alternatives",
+        "conflicted"
+      ],
+      "title": "ConsistencyState",
+      "type": "string"
+    },
+    "CorpusKind": {
+      "description": "What kind of corpus a domain is built from.",
+      "enum": [
+        "policy",
+        "standard",
+        "methodology"
+      ],
+      "title": "CorpusKind",
+      "type": "string"
+    },
+    "DataType": {
+      "description": "The type of a fact type's value (spec section 4).",
+      "enum": [
+        "string",
+        "number",
+        "boolean",
+        "enum",
+        "date",
+        "duration"
+      ],
+      "title": "DataType",
+      "type": "string"
+    },
+    "Deadline": {
+      "additionalProperties": false,
+      "description": "A structured duration with the event it runs from (FR-TMP-01).",
+      "properties": {
+        "anchor_event": {
+          "minLength": 1,
+          "title": "Anchor Event",
+          "type": "string"
+        },
+        "duration": {
+          "minLength": 1,
+          "title": "Duration",
+          "type": "string"
+        }
+      },
+      "required": [
+        "duration",
+        "anchor_event"
+      ],
+      "title": "Deadline",
+      "type": "object"
+    },
+    "DecidedBy": {
+      "description": "Spec section 4. How a conflict was resolved, or that it was not.",
+      "enum": [
+        "policy",
+        "panel",
+        "reviewer",
+        "unresolved"
+      ],
+      "title": "DecidedBy",
+      "type": "string"
+    },
+    "DecisionKind": {
+      "description": "What a decision log entry records (INV-12).",
+      "enum": [
+        "policy_invocation",
+        "judgement",
+        "override"
+      ],
+      "title": "DecisionKind",
+      "type": "string"
+    },
+    "DecisionLogEntry": {
+      "additionalProperties": false,
+      "description": "One decision, with everything needed to reproduce and to audit it.",
+      "properties": {
+        "decided_by": {
+          "minLength": 1,
+          "title": "Decided By",
+          "type": "string"
+        },
+        "decision": {
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "entry_id": {
+          "pattern": "^DEC-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Entry Id",
+          "type": "string"
+        },
+        "hook": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hook"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Inputs",
+          "type": "object"
+        },
+        "kind": {
+          "$ref": "#/$defs/DecisionKind"
+        },
+        "override_id": {
+          "anyOf": [
+            {
+              "pattern": "^REV-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Override Id"
+        },
+        "policy_id": {
+          "anyOf": [
+            {
+              "pattern": "^POL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policy Id"
+        },
+        "procedure_id": {
+          "anyOf": [
+            {
+              "pattern": "^JDG-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Procedure Id"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "title": "Recorded At",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "pattern": "^RUN-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        },
+        "stage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stage"
+        },
+        "subject_id": {
+          "minLength": 1,
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "entry_id",
+        "recorded_at",
+        "kind",
+        "subject_id",
+        "decision",
+        "rationale",
+        "decided_by"
+      ],
+      "title": "DecisionLogEntry",
+      "type": "object"
+    },
+    "DecisionPolicy": {
+      "additionalProperties": false,
+      "description": "A domain's declared way to resolve conflicts and alternatives (glossary 1.5).",
+      "properties": {
+        "applies_when": {
+          "minLength": 1,
+          "title": "Applies When",
+          "type": "string"
+        },
+        "definition": {
+          "discriminator": {
+            "mapping": {
+              "authority_order": "#/$defs/AuthorityOrderDefinition",
+              "conservative": "#/$defs/ConservativeDefinition",
+              "risk_matrix": "#/$defs/RiskMatrixDefinition"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AuthorityOrderDefinition"
+            },
+            {
+              "$ref": "#/$defs/RiskMatrixDefinition"
+            },
+            {
+              "$ref": "#/$defs/ConservativeDefinition"
+            }
+          ],
+          "title": "Definition"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "hooks": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Hooks",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/PolicyKind"
+        },
+        "policy_id": {
+          "pattern": "^POL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "scope": {
+          "items": {
+            "$ref": "#/$defs/PolicyScope"
+          },
+          "minItems": 1,
+          "title": "Scope",
+          "type": "array"
+        }
+      },
+      "required": [
+        "policy_id",
+        "scope",
+        "kind",
+        "applies_when",
+        "definition"
+      ],
+      "title": "DecisionPolicy",
+      "type": "object"
+    },
+    "Defeat": {
+      "additionalProperties": false,
+      "description": "One rule defeating another, with why (spec section 4).\n\nThe defeating rule is the rule that carries this, so only the defeated one is named.",
+      "properties": {
+        "defeated_rule_id": {
+          "pattern": "^RULE-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Defeated Rule Id",
+          "type": "string"
+        },
+        "priority_basis": {
+          "$ref": "#/$defs/PriorityBasis"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "defeated_rule_id",
+        "priority_basis",
+        "rationale"
+      ],
+      "title": "Defeat",
+      "type": "object"
+    },
+    "Document": {
+      "additionalProperties": false,
+      "description": "One source document in a snapshot.\n\n`authority_level` is a key into the domain's authority profile and `licence_class` decides\nwhether text may be stored at all; INV-06 checks both, and INV-11 enforces the second.",
+      "properties": {
+        "authority_level": {
+          "minLength": 1,
+          "title": "Authority Level",
+          "type": "string"
+        },
+        "content_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Hash"
+        },
+        "document_id": {
+          "pattern": "^DOC-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "document_type": {
+          "minLength": 1,
+          "title": "Document Type",
+          "type": "string"
+        },
+        "effective_from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective From"
+        },
+        "effective_to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective To"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "is_backbone": {
+          "default": false,
+          "title": "Is Backbone",
+          "type": "boolean"
+        },
+        "licence_class": {
+          "$ref": "#/$defs/LicenceClass"
+        },
+        "licence_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Licence Note"
+        },
+        "parse_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parse Note"
+        },
+        "parse_status": {
+          "$ref": "#/$defs/ParseStatus"
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "source_kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        },
+        "source_uri": {
+          "minLength": 1,
+          "title": "Source Uri",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "document_type",
+        "authority_level",
+        "source_kind",
+        "source_uri",
+        "licence_class",
+        "parse_status"
+      ],
+      "title": "Document",
+      "type": "object"
+    },
+    "ElementKind": {
+      "description": "Spec section 4. A skeleton element asserts nothing of its own.",
+      "enum": [
+        "objective",
+        "step",
+        "decision_point",
+        "requirement_group",
+        "method_family",
+        "method",
+        "check",
+        "judgement"
+      ],
+      "title": "ElementKind",
+      "type": "string"
+    },
+    "ElementStatus": {
+      "description": "Whether an element has been confirmed. The pilot skeleton marks every element confirmed.",
+      "enum": [
+        "proposed",
+        "confirmed",
+        "retired"
+      ],
+      "title": "ElementStatus",
+      "type": "string"
+    },
+    "EpistemicOverall": {
+      "description": "DP-05: the status that travels with every claim. Computed, never set (see `epistemic`).",
+      "enum": [
+        "verified",
+        "provisional",
+        "inferred",
+        "judged",
+        "overridden",
+        "blocked"
+      ],
+      "title": "EpistemicOverall",
+      "type": "string"
+    },
+    "EpistemicStatus": {
+      "additionalProperties": false,
+      "description": "The status carried by every record (spec section 4, DP-05).",
+      "properties": {
+        "consistency": {
+          "$ref": "#/$defs/ConsistencyState",
+          "default": "consistent"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "extraction_confidence": {
+          "$ref": "#/$defs/ConfidenceBand",
+          "default": "unknown"
+        },
+        "interpretation_confidence": {
+          "$ref": "#/$defs/ConfidenceBand",
+          "default": "unknown"
+        },
+        "overall": {
+          "$ref": "#/$defs/EpistemicOverall",
+          "description": "Computed, never stored (spec section 4, `.claude/rules/models.md`).",
+          "readOnly": true
+        },
+        "provenance_kind": {
+          "$ref": "#/$defs/ProvenanceKind",
+          "default": "extracted"
+        },
+        "source_authority": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Authority"
+        },
+        "triage": {
+          "$ref": "#/$defs/TriageState",
+          "default": "queued"
+        }
+      },
+      "required": [
+        "overall"
+      ],
+      "title": "EpistemicStatus",
+      "type": "object"
+    },
+    "Executability": {
+      "description": "Spec section 4. A frozen rule always carries a reason (FR-CMP-02).",
+      "enum": [
+        "executable",
+        "frozen"
+      ],
+      "title": "Executability",
+      "type": "string"
+    },
+    "ExtractionRecord": {
+      "additionalProperties": false,
+      "description": "What produced a proposition (FR-PRV-01, NFR-DET-01).",
+      "properties": {
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "prompt_id": {
+          "minLength": 1,
+          "title": "Prompt Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "minimum": 1,
+          "title": "Prompt Version",
+          "type": "integer"
+        },
+        "request_hash": {
+          "minLength": 1,
+          "title": "Request Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model",
+        "prompt_id",
+        "prompt_version",
+        "request_hash"
+      ],
+      "title": "ExtractionRecord",
+      "type": "object"
+    },
+    "FactCondition": {
+      "additionalProperties": false,
+      "description": "A leaf: one comparison against one fact type.",
+      "properties": {
+        "fact_type_id": {
+          "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Fact Type Id",
+          "type": "string"
+        },
+        "negated": {
+          "default": false,
+          "title": "Negated",
+          "type": "boolean"
+        },
+        "op": {
+          "const": "fact",
+          "default": "fact",
+          "title": "Op",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/ConditionOperator"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "fact_type_id",
+        "operator"
+      ],
+      "title": "FactCondition",
+      "type": "object"
+    },
+    "FactType": {
+      "additionalProperties": false,
+      "description": "A typed input rules depend on, with an ordered list of providers (glossary 1.5).\n\n`closed_world` defaults to false, so a missing fact is UNKNOWN rather than false: there is\nno negation as failure on an open-world fact (FR-QRY-01).",
+      "properties": {
+        "allow_inference": {
+          "default": false,
+          "title": "Allow Inference",
+          "type": "boolean"
+        },
+        "allowed_values": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Allowed Values",
+          "type": "array"
+        },
+        "artefact_kind": {
+          "default": "none",
+          "title": "Artefact Kind",
+          "type": "string"
+        },
+        "closed_world": {
+          "default": false,
+          "title": "Closed World",
+          "type": "boolean"
+        },
+        "data_type": {
+          "$ref": "#/$defs/DataType"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "fact_type_id": {
+          "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Fact Type Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "obtained_from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Obtained From"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "probe_id": {
+          "anyOf": [
+            {
+              "pattern": "^PRB-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probe Id"
+        },
+        "providers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ProviderKind"
+          },
+          "title": "Providers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "fact_type_id",
+        "name",
+        "data_type",
+        "origin"
+      ],
+      "title": "FactType",
+      "type": "object"
+    },
+    "FieldChange": {
+      "additionalProperties": false,
+      "description": "One field-level change a reviewer made (FR-REV-01).",
+      "properties": {
+        "after": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "before": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "field": {
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "title": "FieldChange",
+      "type": "object"
+    },
+    "FrameworkMapping": {
+      "additionalProperties": false,
+      "description": "A proposition mapped to an element, in framework-led mode (Appendix C.3).",
+      "properties": {
+        "element_id": {
+          "pattern": "^EL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "method": {
+          "$ref": "#/$defs/RelationMethod"
+        },
+        "mode": {
+          "const": "framework",
+          "default": "framework",
+          "title": "Mode",
+          "type": "string"
+        },
+        "proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Proposition Id",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "relation": {
+          "$ref": "#/$defs/FrameworkRelation"
+        }
+      },
+      "required": [
+        "proposition_id",
+        "element_id",
+        "relation",
+        "rationale",
+        "method"
+      ],
+      "title": "FrameworkMapping",
+      "type": "object"
+    },
+    "FrameworkRelation": {
+      "description": "Appendix C.3. Proposition to element, in framework-led mode.",
+      "enum": [
+        "states_requirement",
+        "defines_criterion",
+        "provides_method",
+        "provides_test",
+        "constrains_method",
+        "recommends_method",
+        "specifies_evidence",
+        "defines_term",
+        "validates_step",
+        "alternative_to",
+        "contradicts",
+        "context_only",
+        "no_relation"
+      ],
+      "title": "FrameworkRelation",
+      "type": "string"
+    },
+    "Gap": {
+      "additionalProperties": false,
+      "description": "Something the corpus does not settle (FR-GAP-01, FR-GAP-02).",
+      "properties": {
+        "effect": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effect"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "gap_id": {
+          "pattern": "^GAP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Gap Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/GapKind"
+        },
+        "search_record": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SearchRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus",
+          "default": "open"
+        },
+        "target": {
+          "minLength": 1,
+          "title": "Target",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        }
+      },
+      "required": [
+        "gap_id",
+        "kind",
+        "target"
+      ],
+      "title": "Gap",
+      "type": "object"
+    },
+    "GapKind": {
+      "description": "Spec section 4 and FR-GAP-01.",
+      "enum": [
+        "missing_fact_source",
+        "missing_threshold",
+        "missing_outcome",
+        "missing_definition",
+        "empty_element",
+        "unreachable_branch",
+        "dangling_reference"
+      ],
+      "title": "GapKind",
+      "type": "string"
+    },
+    "GapStatus": {
+      "description": "Where a gap has got to. A spent budget leaves it unresolved (FR-GAP-01).",
+      "enum": [
+        "open",
+        "resolved",
+        "budget_exhausted"
+      ],
+      "title": "GapStatus",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "JudgementOutputSchema": {
+      "additionalProperties": false,
+      "description": "The shape of an outcome. INV-03 checks that `unable_to_determine` is among them.",
+      "properties": {
+        "outcomes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Outcomes",
+          "type": "array"
+        },
+        "requires_confidence": {
+          "default": true,
+          "title": "Requires Confidence",
+          "type": "boolean"
+        },
+        "requires_rationale": {
+          "default": true,
+          "title": "Requires Rationale",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "outcomes"
+      ],
+      "title": "JudgementOutputSchema",
+      "type": "object"
+    },
+    "JudgementProcedure": {
+      "additionalProperties": false,
+      "description": "A question the tool decides at run time (FR-JDG-01).",
+      "properties": {
+        "cache_by": {
+          "default": [
+            "artefact_hash",
+            "inputs",
+            "prompt_version"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cache By",
+          "type": "array"
+        },
+        "considerations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Consideration"
+          },
+          "title": "Considerations",
+          "type": "array"
+        },
+        "cost_class": {
+          "$ref": "#/$defs/ProbeCost",
+          "default": "cheap"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "inputs": {
+          "default": [],
+          "items": {
+            "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "output_schema": {
+          "$ref": "#/$defs/JudgementOutputSchema"
+        },
+        "procedure_id": {
+          "pattern": "^JDG-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Procedure Id",
+          "type": "string"
+        },
+        "prompt_id": {
+          "minLength": 1,
+          "title": "Prompt Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "minimum": 1,
+          "title": "Prompt Version",
+          "type": "integer"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "source_propositions": {
+          "default": [],
+          "items": {
+            "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Source Propositions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "procedure_id",
+        "question",
+        "prompt_id",
+        "prompt_version",
+        "output_schema"
+      ],
+      "title": "JudgementProcedure",
+      "type": "object"
+    },
+    "JudgementRecord": {
+      "additionalProperties": false,
+      "description": "What a procedure actually returned, logged in full (FR-JDG-01, INV-12).",
+      "properties": {
+        "artefact_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artefact Sha256"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "decided_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decided At"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Inputs",
+          "type": "object"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "outcome": {
+          "minLength": 1,
+          "title": "Outcome",
+          "type": "string"
+        },
+        "procedure_id": {
+          "pattern": "^JDG-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Procedure Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "minimum": 1,
+          "title": "Prompt Version",
+          "type": "integer"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ProvenanceKind",
+          "default": "judged"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "procedure_id",
+        "outcome",
+        "rationale",
+        "confidence",
+        "model",
+        "prompt_version"
+      ],
+      "title": "JudgementRecord",
+      "type": "object"
+    },
+    "LicenceClass": {
+      "description": "Glossary 1.5. `reference` and `excluded` sources never have stored text (INV-11).",
+      "enum": [
+        "store",
+        "reference",
+        "excluded"
+      ],
+      "title": "LicenceClass",
+      "type": "string"
+    },
+    "NormativeForce": {
+      "description": "Appendix B. What a proposition does, and therefore what it may compile to.",
+      "enum": [
+        "MUST",
+        "MUST_NOT",
+        "SHOULD",
+        "SHOULD_NOT",
+        "MAY",
+        "CAN",
+        "DESCRIPTIVE",
+        "DEFINITIONAL",
+        "EVALUATIVE_JUDGEMENT",
+        "EXPLANATORY",
+        "EXAMPLE",
+        "UNRESOLVED"
+      ],
+      "title": "NormativeForce",
+      "type": "string"
+    },
+    "NotCondition": {
+      "additionalProperties": false,
+      "description": "The operand must not hold. Three-valued, so UNKNOWN negates to UNKNOWN (FR-QRY-01).",
+      "properties": {
+        "op": {
+          "const": "not",
+          "default": "not",
+          "title": "Op",
+          "type": "string"
+        },
+        "operand": {
+          "discriminator": {
+            "mapping": {
+              "all_of": "#/$defs/AllOf",
+              "any_of": "#/$defs/AnyOf",
+              "fact": "#/$defs/FactCondition",
+              "not": "#/$defs/NotCondition"
+            },
+            "propertyName": "op"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/FactCondition"
+            },
+            {
+              "$ref": "#/$defs/AllOf"
+            },
+            {
+              "$ref": "#/$defs/AnyOf"
+            },
+            {
+              "$ref": "#/$defs/NotCondition"
+            }
+          ],
+          "title": "Operand"
+        }
+      },
+      "required": [
+        "operand"
+      ],
+      "title": "NotCondition",
+      "type": "object"
+    },
+    "Origin": {
+      "description": "Spec section 4. A file marked `edited` is only re-proposed as a diff (FR-CFG-02).",
+      "enum": [
+        "derived",
+        "proposed",
+        "edited"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "Outcome": {
+      "additionalProperties": false,
+      "description": "One way out of a decision point, and where it leads.\n\nINV-03 requires every decision to carry an `unable_to_determine` outcome *with an edge*,\nso the target is what makes the outcome more than a label.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "target_element_id": {
+          "anyOf": [
+            {
+              "pattern": "^EL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Element Id"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Outcome",
+      "type": "object"
+    },
+    "Override": {
+      "additionalProperties": false,
+      "description": "A caller's or reviewer's replacement for an automated decision (FR-JDG-04).\n\nOverrides always win, and show in the response as `overridden` (FR-TOO-02).",
+      "properties": {
+        "decided_at": {
+          "format": "date-time",
+          "title": "Decided At",
+          "type": "string"
+        },
+        "decided_by": {
+          "minLength": 1,
+          "title": "Decided By",
+          "type": "string"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "override_id": {
+          "pattern": "^REV-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Override Id",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "target_id": {
+          "minLength": 1,
+          "title": "Target Id",
+          "type": "string"
+        },
+        "target_kind": {
+          "minLength": 1,
+          "title": "Target Kind",
+          "type": "string"
+        },
+        "target_record_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Record Hash"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "override_id",
+        "target_id",
+        "target_kind",
+        "rationale",
+        "decided_by",
+        "decided_at"
+      ],
+      "title": "Override",
+      "type": "object"
+    },
+    "ParseStatus": {
+      "description": "The S1 exit gate: every file is parsed, referenced or rejected with a reason.",
+      "enum": [
+        "parsed",
+        "referenced",
+        "rejected"
+      ],
+      "title": "ParseStatus",
+      "type": "string"
+    },
+    "Passage": {
+      "additionalProperties": false,
+      "description": "A unit of segmented source text (FR-SEG-01).\n\n`text` is None for a `reference` or `excluded` source, which is what INV-11 checks. Source\ntext is recoverable from the anchor and offsets either way (FR-ING-02).",
+      "properties": {
+        "anchor": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "cross_references": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cross References",
+          "type": "array"
+        },
+        "definitions_in_scope": {
+          "default": [],
+          "items": {
+            "pattern": "^CON-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Definitions In Scope",
+          "type": "array"
+        },
+        "document_id": {
+          "pattern": "^DOC-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "end_offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Offset"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "heading_path": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Heading Path",
+          "type": "array"
+        },
+        "parent_passage_id": {
+          "anyOf": [
+            {
+              "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Passage Id"
+        },
+        "passage_id": {
+          "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "passage_type": {
+          "$ref": "#/$defs/PassageType"
+        },
+        "start_offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Offset"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "required": [
+        "passage_id",
+        "document_id",
+        "anchor",
+        "passage_type"
+      ],
+      "title": "Passage",
+      "type": "object"
+    },
+    "PassageType": {
+      "description": "Spec section 4. Notes and examples inherit their force from the passage type.",
+      "enum": [
+        "body",
+        "list_item",
+        "table_cell",
+        "note",
+        "example",
+        "definition",
+        "test_rule"
+      ],
+      "title": "PassageType",
+      "type": "string"
+    },
+    "PolicyInputSource": {
+      "description": "Where a policy gets one of its inputs (`inputs_from` in decision_policy.yaml).",
+      "enum": [
+        "caller",
+        "judgement",
+        "probe",
+        "inferred",
+        "derived"
+      ],
+      "title": "PolicyInputSource",
+      "type": "string"
+    },
+    "PolicyKind": {
+      "description": "Spec section 4. The shape of a policy's definition depends on this.",
+      "enum": [
+        "authority_order",
+        "risk_matrix",
+        "conservative"
+      ],
+      "title": "PolicyKind",
+      "type": "string"
+    },
+    "PolicyScope": {
+      "description": "Spec section 4. What a decision policy governs.",
+      "enum": [
+        "conflicts",
+        "alternatives",
+        "judgement_defaults"
+      ],
+      "title": "PolicyScope",
+      "type": "string"
+    },
+    "PriorityBasis": {
+      "description": "Spec section 4. Why one rule defeats another.",
+      "enum": [
+        "exception",
+        "specific_over_general",
+        "later_over_earlier",
+        "higher_authority",
+        "policy",
+        "reviewer"
+      ],
+      "title": "PriorityBasis",
+      "type": "string"
+    },
+    "Probe": {
+      "additionalProperties": false,
+      "description": "A deterministic function that computes fact types or abstains (glossary 1.5).",
+      "properties": {
+        "abstain_reasons": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Abstain Reasons",
+          "type": "array"
+        },
+        "artefact_kind": {
+          "minLength": 1,
+          "title": "Artefact Kind",
+          "type": "string"
+        },
+        "computes": {
+          "items": {
+            "pattern": "^FACT-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Computes",
+          "type": "array"
+        },
+        "cost": {
+          "$ref": "#/$defs/ProbeCost"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "implementation": {
+          "minLength": 1,
+          "title": "Implementation",
+          "type": "string"
+        },
+        "preconditions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Preconditions",
+          "type": "array"
+        },
+        "probe_id": {
+          "pattern": "^PRB-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Probe Id",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "probe_id",
+        "implementation",
+        "computes",
+        "artefact_kind",
+        "cost"
+      ],
+      "title": "Probe",
+      "type": "object"
+    },
+    "ProbeCost": {
+      "description": "Spec section 4. Expensive probes are opt-in (FR-PRB-02).",
+      "enum": [
+        "trivial",
+        "cheap",
+        "expensive"
+      ],
+      "title": "ProbeCost",
+      "type": "string"
+    },
+    "Proposition": {
+      "additionalProperties": false,
+      "description": "One structured statement from a passage (glossary 1.5).",
+      "properties": {
+        "action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Slot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "actor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Slot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "authority_holder": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Slot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "conditions": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "title": "Conditions",
+          "type": "array"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "exceptions_referenced": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Exceptions Referenced",
+          "type": "array"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "extraction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExtractionRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "force_cue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Force Cue"
+        },
+        "normative_force": {
+          "$ref": "#/$defs/NormativeForce"
+        },
+        "object": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Slot"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "operative": {
+          "default": false,
+          "title": "Operative",
+          "type": "boolean"
+        },
+        "passage_id": {
+          "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Proposition Id",
+          "type": "string"
+        },
+        "span": {
+          "$ref": "#/$defs/Span"
+        },
+        "temporal": {
+          "$ref": "#/$defs/TemporalClaim"
+        }
+      },
+      "required": [
+        "proposition_id",
+        "passage_id",
+        "span",
+        "normative_force"
+      ],
+      "title": "Proposition",
+      "type": "object"
+    },
+    "PropositionPropositionRelation": {
+      "additionalProperties": false,
+      "description": "A relation between two propositions (Appendix C.2).\n\nFR-REC-01: EXCEPTS, QUALIFIES, SUPERSEDES, ELABORATES and ALTERNATIVES are all considered\nbefore CONTRADICTS, and a CONTRADICTS pair goes to a panel (FR-CFL-01).",
+      "properties": {
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "method": {
+          "$ref": "#/$defs/RelationMethod"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "relation": {
+          "$ref": "#/$defs/PropositionRelation"
+        },
+        "source_proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Source Proposition Id",
+          "type": "string"
+        },
+        "target_proposition_id": {
+          "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Target Proposition Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_proposition_id",
+        "target_proposition_id",
+        "relation",
+        "rationale",
+        "method"
+      ],
+      "title": "PropositionPropositionRelation",
+      "type": "object"
+    },
+    "PropositionRelation": {
+      "description": "Appendix C.2. Proposition to proposition.",
+      "enum": [
+        "SUPPORTS",
+        "ELABORATES",
+        "QUALIFIES",
+        "EXCEPTS",
+        "SUPERSEDES",
+        "ALTERNATIVES",
+        "CONTRADICTS",
+        "DUPLICATES",
+        "REFERENCES",
+        "DEPENDS_ON",
+        "DEFINES",
+        "IMPLEMENTED_BY"
+      ],
+      "title": "PropositionRelation",
+      "type": "string"
+    },
+    "ProvenanceKind": {
+      "description": "Spec section 4, one dimension of epistemic status.",
+      "enum": [
+        "extracted",
+        "inferred",
+        "judged",
+        "derived",
+        "overridden"
+      ],
+      "title": "ProvenanceKind",
+      "type": "string"
+    },
+    "ProviderKind": {
+      "description": "Spec section 4. A fact type's providers, tried in this declared order (FR-TOO-04).",
+      "enum": [
+        "probe",
+        "caller",
+        "inferred",
+        "derived"
+      ],
+      "title": "ProviderKind",
+      "type": "string"
+    },
+    "ReconstructionMode": {
+      "description": "Spec 1.1. Backbone-led has exactly one backbone; framework-led has none (INV-06).",
+      "enum": [
+        "backbone",
+        "framework"
+      ],
+      "title": "ReconstructionMode",
+      "type": "string"
+    },
+    "RelationMethod": {
+      "description": "How a relation was arrived at (spec section 4).",
+      "enum": [
+        "deterministic",
+        "llm",
+        "panel",
+        "human"
+      ],
+      "title": "RelationMethod",
+      "type": "string"
+    },
+    "Resolution": {
+      "additionalProperties": false,
+      "description": "How a conflict was resolved, or that it was not (FR-CFL-02, DP-10).",
+      "properties": {
+        "decided_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decided At"
+        },
+        "decided_by": {
+          "$ref": "#/$defs/DecidedBy",
+          "default": "unresolved"
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision"
+        },
+        "hook": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hook"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Inputs",
+          "type": "object"
+        },
+        "policy_id": {
+          "anyOf": [
+            {
+              "pattern": "^POL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policy Id"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        }
+      },
+      "title": "Resolution",
+      "type": "object"
+    },
+    "ReviewDecision": {
+      "additionalProperties": false,
+      "description": "What a reviewer decided about one record.",
+      "properties": {
+        "changes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FieldChange"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "decided_at": {
+          "format": "date-time",
+          "title": "Decided At",
+          "type": "string"
+        },
+        "decided_by": {
+          "minLength": 1,
+          "title": "Decided By",
+          "type": "string"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "outcome": {
+          "$ref": "#/$defs/ReviewOutcome"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "review_id": {
+          "pattern": "^REV-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "target_id": {
+          "minLength": 1,
+          "title": "Target Id",
+          "type": "string"
+        },
+        "target_record_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Record Hash"
+        }
+      },
+      "required": [
+        "review_id",
+        "target_id",
+        "outcome",
+        "decided_by",
+        "decided_at"
+      ],
+      "title": "ReviewDecision",
+      "type": "object"
+    },
+    "ReviewOutcome": {
+      "description": "Spec section 4 and FR-REV-01. Reject, modify and override all require a rationale.",
+      "enum": [
+        "approve",
+        "reject",
+        "modify",
+        "override",
+        "defer"
+      ],
+      "title": "ReviewOutcome",
+      "type": "string"
+    },
+    "RiskMatrixDefinition": {
+      "additionalProperties": false,
+      "description": "A matrix over named axes, as the pilot's POL-ux-stricter-wins uses.",
+      "properties": {
+        "axes": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "minProperties": 1,
+          "title": "Axes",
+          "type": "object"
+        },
+        "defaults": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Defaults",
+          "type": "object"
+        },
+        "inputs_from": {
+          "additionalProperties": {
+            "$ref": "#/$defs/PolicyInputSource"
+          },
+          "title": "Inputs From",
+          "type": "object"
+        },
+        "kind": {
+          "const": "risk_matrix",
+          "default": "risk_matrix",
+          "title": "Kind",
+          "type": "string"
+        },
+        "rule": {
+          "minLength": 1,
+          "title": "Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "axes",
+        "rule"
+      ],
+      "title": "RiskMatrixDefinition",
+      "type": "object"
+    },
+    "Rule": {
+      "additionalProperties": false,
+      "description": "A compiled obligation, permission or derivation.",
+      "properties": {
+        "advisory": {
+          "default": false,
+          "title": "Advisory",
+          "type": "boolean"
+        },
+        "alternatives_set_id": {
+          "anyOf": [
+            {
+              "pattern": "^CFL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alternatives Set Id"
+        },
+        "conclusion": {
+          "$ref": "#/$defs/Conclusion"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "all_of": "#/$defs/AllOf",
+                  "any_of": "#/$defs/AnyOf",
+                  "fact": "#/$defs/FactCondition",
+                  "not": "#/$defs/NotCondition"
+                },
+                "propertyName": "op"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/FactCondition"
+                },
+                {
+                  "$ref": "#/$defs/AllOf"
+                },
+                {
+                  "$ref": "#/$defs/AnyOf"
+                },
+                {
+                  "$ref": "#/$defs/NotCondition"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "defeats": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Defeat"
+          },
+          "title": "Defeats",
+          "type": "array"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "executability": {
+          "$ref": "#/$defs/Executability",
+          "default": "executable"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "frozen_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frozen Reason"
+        },
+        "rule_id": {
+          "pattern": "^RULE-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_set_id": {
+          "minLength": 1,
+          "title": "Rule Set Id",
+          "type": "string"
+        },
+        "source_propositions": {
+          "default": [],
+          "items": {
+            "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Source Propositions",
+          "type": "array"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "temporal": {
+          "$ref": "#/$defs/TemporalClaim"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_set_id",
+        "statement",
+        "conclusion"
+      ],
+      "title": "Rule",
+      "type": "object"
+    },
+    "SearchCandidate": {
+      "additionalProperties": false,
+      "description": "Something the search turned up, and what was made of it.",
+      "properties": {
+        "passage_id": {
+          "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        },
+        "verdict": {
+          "minLength": 1,
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "passage_id",
+        "verdict"
+      ],
+      "title": "SearchCandidate",
+      "type": "object"
+    },
+    "SearchQuery": {
+      "additionalProperties": false,
+      "description": "One retrieval call made while looking for what a gap is missing (FR-GAP-01).",
+      "properties": {
+        "filters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Filters",
+          "type": "object"
+        },
+        "method": {
+          "minLength": 1,
+          "title": "Method",
+          "type": "string"
+        },
+        "query": {
+          "minLength": 1,
+          "title": "Query",
+          "type": "string"
+        }
+      },
+      "required": [
+        "query",
+        "method"
+      ],
+      "title": "SearchQuery",
+      "type": "object"
+    },
+    "SearchRecord": {
+      "additionalProperties": false,
+      "description": "What was searched and what came back. The evidence behind a gap.",
+      "properties": {
+        "budget_exhausted": {
+          "default": false,
+          "title": "Budget Exhausted",
+          "type": "boolean"
+        },
+        "calls_spent": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Calls Spent",
+          "type": "integer"
+        },
+        "candidates": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SearchCandidate"
+          },
+          "title": "Candidates",
+          "type": "array"
+        },
+        "queries": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SearchQuery"
+          },
+          "title": "Queries",
+          "type": "array"
+        }
+      },
+      "title": "SearchRecord",
+      "type": "object"
+    },
+    "Skeleton": {
+      "additionalProperties": false,
+      "description": "The whole structure, derived from a backbone or proposed by the Engine (FR-SKL).",
+      "properties": {
+        "elements": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SkeletonElement"
+          },
+          "title": "Elements",
+          "type": "array"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "mode": {
+          "$ref": "#/$defs/ReconstructionMode"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "skeleton_id": {
+          "pattern": "^SKEL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Skeleton Id",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "skeleton_id",
+        "version",
+        "mode",
+        "origin"
+      ],
+      "title": "Skeleton",
+      "type": "object"
+    },
+    "SkeletonElement": {
+      "additionalProperties": false,
+      "description": "One node of the skeleton.",
+      "properties": {
+        "citing_passages": {
+          "default": [],
+          "items": {
+            "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Citing Passages",
+          "type": "array"
+        },
+        "element_id": {
+          "pattern": "^EL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "epistemic": {
+          "$ref": "#/$defs/EpistemicStatus"
+        },
+        "expected_sources": {
+          "default": [],
+          "items": {
+            "pattern": "^DOC-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Expected Sources",
+          "type": "array"
+        },
+        "extensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "judgement_procedure_id": {
+          "anyOf": [
+            {
+              "pattern": "^JDG-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judgement Procedure Id"
+        },
+        "kind": {
+          "$ref": "#/$defs/ElementKind"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "outcomes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Outcome"
+          },
+          "title": "Outcomes",
+          "type": "array"
+        },
+        "parent_element_id": {
+          "anyOf": [
+            {
+              "pattern": "^EL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Element Id"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        },
+        "rule_set_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rule Set Id"
+        },
+        "selection_facts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Selection Facts",
+          "type": "array"
+        },
+        "source_propositions": {
+          "default": [],
+          "items": {
+            "pattern": "^PROP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Source Propositions",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/ElementStatus",
+          "default": "proposed"
+        }
+      },
+      "required": [
+        "element_id",
+        "kind",
+        "label",
+        "origin"
+      ],
+      "title": "SkeletonElement",
+      "type": "object"
+    },
+    "Slot": {
+      "additionalProperties": false,
+      "description": "One filled role in a proposition: actor, action, object or authority holder.",
+      "properties": {
+        "concept_id": {
+          "anyOf": [
+            {
+              "pattern": "^CON-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Concept Id"
+        },
+        "raw_text": {
+          "minLength": 1,
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "resolution": {
+          "$ref": "#/$defs/SlotResolution",
+          "default": "unresolved"
+        }
+      },
+      "required": [
+        "raw_text"
+      ],
+      "title": "Slot",
+      "type": "object"
+    },
+    "SlotResolution": {
+      "description": "FR-VOC-01. Whether a slot's raw text resolved to a concept.",
+      "enum": [
+        "unresolved",
+        "confirmed",
+        "flagged"
+      ],
+      "title": "SlotResolution",
+      "type": "string"
+    },
+    "SourceKind": {
+      "description": "Where a document came from (FR-ING-01).",
+      "enum": [
+        "file",
+        "web",
+        "repository",
+        "snapshot"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "Span": {
+      "additionalProperties": false,
+      "description": "A verbatim quotation from a passage, with its offsets.\n\n`verified` means the text matched the passage exactly (FR-EXT-02). INV-01 requires it on\nevery proposition; a mismatch rejects the proposition rather than the run (DP-04).",
+      "properties": {
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "passage_id": {
+          "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "passage_id",
+        "start",
+        "end",
+        "text"
+      ],
+      "title": "Span",
+      "type": "object"
+    },
+    "TemporalClaim": {
+      "additionalProperties": false,
+      "description": "When a proposition applies, and how that was established (FR-TMP-01).",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Basis"
+        },
+        "deadlines": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Deadline"
+          },
+          "title": "Deadlines",
+          "type": "array"
+        },
+        "effective_from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective From"
+        },
+        "effective_to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective To"
+        },
+        "status": {
+          "$ref": "#/$defs/TemporalStatus",
+          "default": "unknown"
+        }
+      },
+      "title": "TemporalClaim",
+      "type": "object"
+    },
+    "TemporalStatus": {
+      "description": "Spec section 4. Only `current` compiles as executable by default (FR-TMP-01).",
+      "enum": [
+        "current",
+        "historical",
+        "scheduled",
+        "superseded",
+        "unknown"
+      ],
+      "title": "TemporalStatus",
+      "type": "string"
+    },
+    "TriageState": {
+      "description": "Glossary 1.5 and FR-TRI-01. `blocked` happens only when an invariant fails.",
+      "enum": [
+        "auto_approved",
+        "provisional",
+        "queued",
+        "blocked"
+      ],
+      "title": "TriageState",
+      "type": "string"
+    }
+  },
+  "$id": "https://formalisation.engine/schema/ir/1.0.0/ir.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One run's intermediate representation.",
+  "properties": {
+    "authority_profile": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuthorityProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "config_hash": {
+      "minLength": 1,
+      "title": "Config Hash",
+      "type": "string"
+    },
+    "conflicts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Conflict"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision_log": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DecisionLogEntry"
+      },
+      "title": "Decision Log",
+      "type": "array"
+    },
+    "documents": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Document"
+      },
+      "title": "Documents",
+      "type": "array"
+    },
+    "domain": {
+      "minLength": 1,
+      "title": "Domain",
+      "type": "string"
+    },
+    "element_relations": {
+      "default": [],
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "backbone": "#/$defs/BackboneMapping",
+            "framework": "#/$defs/FrameworkMapping"
+          },
+          "propertyName": "mode"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/BackboneMapping"
+          },
+          {
+            "$ref": "#/$defs/FrameworkMapping"
+          }
+        ]
+      },
+      "title": "Element Relations",
+      "type": "array"
+    },
+    "extensions": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "description": "Domain-specific fields, keyed '<namespace>.<field>'. The only place a domain may add to a record without a core change (NFR-PRT-01).",
+      "title": "Extensions",
+      "type": "object"
+    },
+    "fact_types": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/FactType"
+      },
+      "title": "Fact Types",
+      "type": "array"
+    },
+    "gaps": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Gap"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "ir_version": {
+      "minLength": 1,
+      "title": "Ir Version",
+      "type": "string"
+    },
+    "judgement_procedures": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/JudgementProcedure"
+      },
+      "title": "Judgement Procedures",
+      "type": "array"
+    },
+    "judgement_records": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/JudgementRecord"
+      },
+      "title": "Judgement Records",
+      "type": "array"
+    },
+    "overrides": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Override"
+      },
+      "title": "Overrides",
+      "type": "array"
+    },
+    "passages": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Passage"
+      },
+      "title": "Passages",
+      "type": "array"
+    },
+    "policies": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DecisionPolicy"
+      },
+      "title": "Policies",
+      "type": "array"
+    },
+    "policy_hash": {
+      "minLength": 1,
+      "title": "Policy Hash",
+      "type": "string"
+    },
+    "probes": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Probe"
+      },
+      "title": "Probes",
+      "type": "array"
+    },
+    "prompt_set_version": {
+      "minLength": 1,
+      "title": "Prompt Set Version",
+      "type": "string"
+    },
+    "proposition_relations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PropositionPropositionRelation"
+      },
+      "title": "Proposition Relations",
+      "type": "array"
+    },
+    "propositions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Proposition"
+      },
+      "title": "Propositions",
+      "type": "array"
+    },
+    "reconstruction_mode": {
+      "$ref": "#/$defs/ReconstructionMode"
+    },
+    "reviews": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ReviewDecision"
+      },
+      "title": "Reviews",
+      "type": "array"
+    },
+    "rules": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Rule"
+      },
+      "title": "Rules",
+      "type": "array"
+    },
+    "run_id": {
+      "pattern": "^RUN-[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "skeleton": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Skeleton"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "snapshot_id": {
+      "pattern": "^SNAP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Snapshot Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "ir_version",
+    "run_id",
+    "snapshot_id",
+    "domain",
+    "reconstruction_mode",
+    "config_hash",
+    "policy_hash",
+    "prompt_set_version",
+    "created_at"
+  ],
+  "title": "Formalisation Engine IR",
+  "type": "object"
+}

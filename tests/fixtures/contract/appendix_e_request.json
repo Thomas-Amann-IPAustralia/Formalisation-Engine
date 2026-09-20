@@ -1,0 +1,23 @@
+{
+  "contract_version": "1.0",
+  "objective": "page-structure",
+  "artefacts": [
+    {
+      "kind": "html",
+      "path": "./build/index.html",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "facts": {
+    "audience": { "value": "general_public", "source": "caller" }
+  },
+  "overrides": {
+    "heading_describes_section": { "value": false, "source": "override", "by": "ux-designer" }
+  },
+  "options": {
+    "mode": "answer",
+    "no_inference": false,
+    "max_probe_cost": "cheap",
+    "as_at": "2026-09-18"
+  }
+}

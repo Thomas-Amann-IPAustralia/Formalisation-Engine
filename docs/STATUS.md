@@ -4,54 +4,52 @@ Milestone: M0 Contract and models
 Updated: 2026-09-20
 
 ## Done recently
-- Starter kit reviewed and made runnable: `uv.lock` committed, hooks committed executable (they
-  were mode 644 and doing nothing), `.pytest_cache/` untracked, `.env.example` added,
-  `README-STARTER.md` became `README.md`.
-- ADRs 0001 to 0003 Accepted: mypy strict with the Pydantic plugin, SQLite FTS5 with built-in
-  BM25, Docling local; page structure and headings as the M1 objective with
-  `POL-ux-stricter-wins` and all five triage signals required; `gemini-2.5-flash` for every
-  inference role and `nomic-embed-text-v1.5` self-hosted.
-- ADR-0004 Accepted and applied by Tom: the push block is gone from `guard-bash.sh` and
-  `settings.json`, the live-run matcher is narrowed, and `CLAUDE.md` and the `implement-req`
-  skill no longer say never push. Re-verified against the live hook after the edits: 23 of 23
-  cases behave as intended, the live-run, pip and recursive-delete rules all still fire, the
-  other twelve deny entries survive, and a plain push now succeeds.
-- Secret scan added to CI (`detect-secrets` over tracked files), which closes the NFR-SEC-01 gap.
-  Verified both ways: clean on this tree, and it fails the step on a planted key.
-- uv download cache enabled in CI, keyed on `uv.lock`.
-- `spacy` and `z3-solver` moved to the `nlp` and `solver` extras. Base install 462 MB to 170 MB.
-- Key names aligned with the repository secrets and variables: `FORMAL_ENGINE_GEMINI`,
-  `LANGFUSE_SECRET_KEY`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_BASE_URL`.
+- The IR spine: `engine.ids`, `engine.models` (spec section 4), the epistemic status function,
+  the Appendix D invariant checks, the Appendix E contract, and JSON Schema generated from all
+  of it. 186 tests; mypy strict and ruff clean.
+- `schema/` is generated and committed by `uv run engine schema export`; `--check` diffs it and
+  exits non-zero, and both a unit test and CI run that.
+- M0 coverage: INV-01 to INV-12 and NFR-INT-01 passing, NFR-MNT-01 evidence-needed.
+- ADR-0005 (Proposed) records the eight points where the spec is silent and this stage chose.
+- The spec-auditor pass found three real gaps, all fixed: INV-12 never checked judgements,
+  it accepted an input-less log entry if a sibling entry had inputs, and one Appendix E
+  tightening was unrecorded.
 
 ## In progress
-- Nothing in code. M0 is the contract, the models and the gold slice.
+- Nothing. The branch is clean and pushed.
 
 ## Next up
-- IR models with invariant checks (INV-01 to INV-12); JSON Schema export.
-- Decision log schema and policy format.
-- Gold slice: propositions, rules, a judgement point, an alternatives set, fact sets, question set.
-- S0 config validation should check SQLite has FTS5 at startup, not at first query (ADR-0001).
+- S0 configuration validation: FR-CFG-01 to FR-CFG-03 over the seven domain files, naming the
+  bad field, with the FTS5 startup check from ADR-0001.
+- The gold slice (FR-EVL-01). The models validate it; `gold/` is yours to write.
+- `engine.stores`, which implements the `IRLookup` protocol the invariant checks take.
+
+## Coverage that is narrower than it reads
+- `coverage` counts a requirement passing as soon as one test claims it. Three claims here are
+  partial: **NFR-INT-01** (schemas, ISO 8601, UTF-8 and IRIs are done; "usable as a LangGraph
+  tool, MCP exposes the same operations" needs the package, M1/M5), **FR-EPI-01** (the `overall`
+  function only, not propagation, M4) and **NFR-PRT-01** (the `extensions` point only, not the
+  provider abstraction, M2). **INV-12** checks that policy invocations, judgements and overrides
+  reach the log with their inputs, and that an override beats a policy resolution, but not the
+  "on an unchanged record" qualifier; ADR-0005 says why that waits for M4.
 
 ## Blocked or failing
 - Nothing failing.
 
 ## Questions for Tom
-- **Branch protection on `main`.** Removing the push block means nothing local stops a force-push
-  to `main` any more. The old rule only stopped a careless one anyway. A branch protection rule in
-  the GitHub settings (require a pull request, block force-pushes) is the control that actually
-  holds, because it applies server-side to every actor. Five minutes in Settings then Branches.
-- **The stale spec sentence.** Section 2 describes the stack as "Anthropic API behind a provider
-  abstraction"; ADR-0003 changed that to Gemini. Claude's attempt to read `spec-src/` was refused
-  by the permission layer, so this one is yours. Suggested replacement for that clause: "a model
-  provider API behind a provider abstraction (currently Gemini; see ADR-0003)". NFR-PRT-01 names
-  no vendor, so nothing normative is affected. Run `python3 scripts/spec_tools.py build` after.
-- The secret scan reads the working tree, not git history, so a secret committed and later removed
-  would not be caught. Add `gitleaks` or `trufflehog` over full history if that matters.
-- `detect-secrets` and `pip-audit` both run unpinned through `uvx`, so a new release could change
-  CI behaviour without a commit. Pin both if CI stability matters more than currency.
-- `POL-ux-stricter-wins` needs a defined answer for a missing `effort_to_fix` from the caller.
-  Conservative reading: treat absent effort as not-high, so the stricter requirement wins.
-- HTML parser for the first probe (ADR-0001 default: a standard HTML parser; Docling for documents).
-- Judgement cost caps are still TODO in `domain_config.yaml` (OQ-03); they need an M5 measurement.
-- `spacy` is in an extra but is not referenced by any rule file or requirement yet. If segmentation
-  turns out not to need it, drop it rather than carrying 230 MB into M2.
+- **ADR-0005 needs a status.** Each decision sits behind one constant, function or field, so
+  changing any is small. Two worth a look: the `overall` truth table, and one additive optional
+  field on Appendix E (`Citation.passage_id`) without which INV-10's "resolves to a passage"
+  cannot be checked.
+- **Three spellings for "could not decide".** INV-03 says `unable_to_determine`,
+  `POL-ux-conservative-default` says `undetermined`, FR-QRY-01 and FR-PRB-01 say UNKNOWN. I
+  implemented INV-03's spelling and left the config alone. The first two should converge.
+- **Appendix E's sample shows uncited assertions** (`"citations": []` on advisory and
+  judgements) against INV-10, FR-TOO-03 and Appendix A, which says the advisory is cited. I read
+  the empty arrays as abbreviation and check INV-10 strictly.
+- **`POL-ux-stricter-wins` with a missing `effort_to_fix`.** `RiskMatrixDefinition` now takes a
+  `defaults` mapping so the answer is declared in configuration, not decided in code. What
+  should the pilot's be? Conservative reading: absent effort is not-high, so stricter wins.
+- Still open: branch protection on `main`; spec section 2 still says "Anthropic API" where
+  ADR-0003 says Gemini; `detect-secrets` and `pip-audit` run unpinned through `uvx`; `spacy` is
+  in an extra and referenced by nothing.

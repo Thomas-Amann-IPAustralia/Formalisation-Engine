@@ -1,0 +1,717 @@
+{
+  "$defs": {
+    "AdvisoryItem": {
+      "additionalProperties": false,
+      "description": "Guidance, never an executable obligation (G3).",
+      "properties": {
+        "citations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "rule_id": {
+          "pattern": "^RULE-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "statement"
+      ],
+      "title": "AdvisoryItem",
+      "type": "object"
+    },
+    "AlternativeOption": {
+      "additionalProperties": false,
+      "description": "One option of an unresolved alternatives set (FR-CFL-03).",
+      "properties": {
+        "citations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "conditions": {
+          "minLength": 1,
+          "title": "Conditions",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "conditions"
+      ],
+      "title": "AlternativeOption",
+      "type": "object"
+    },
+    "AlternativesItem": {
+      "additionalProperties": false,
+      "description": "Alternatives returned with their conditions, nothing chosen (DP-10, G4).",
+      "properties": {
+        "options": {
+          "items": {
+            "$ref": "#/$defs/AlternativeOption"
+          },
+          "minItems": 2,
+          "title": "Options",
+          "type": "array"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "unresolved_because": {
+          "minLength": 1,
+          "title": "Unresolved Because",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "options",
+        "unresolved_because"
+      ],
+      "title": "AlternativesItem",
+      "type": "object"
+    },
+    "AppliesItem": {
+      "additionalProperties": false,
+      "description": "A rule that applies, with its status and the state of the claim (FR-TOO-02).",
+      "properties": {
+        "citations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "facts_used": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FactUsed"
+          },
+          "title": "Facts Used",
+          "type": "array"
+        },
+        "rule_id": {
+          "pattern": "^RULE-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/EpistemicOverall"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/AssertionStatus"
+        }
+      },
+      "required": [
+        "rule_id",
+        "statement",
+        "status",
+        "state"
+      ],
+      "title": "AppliesItem",
+      "type": "object"
+    },
+    "AssertionStatus": {
+      "description": "Appendix E `applies[].status`. Three-valued, because a missing fact is UNKNOWN\n(FR-QRY-01).",
+      "enum": [
+        "satisfied",
+        "not_satisfied",
+        "unknown"
+      ],
+      "title": "AssertionStatus",
+      "type": "string"
+    },
+    "Citation": {
+      "additionalProperties": false,
+      "description": "Where an assertion comes from (INV-10, FR-TOO-03).\n\n`quote` is absent for a `reference` source, which keeps anchor and link but stores no text\n(FR-ING-04, INV-11, G11).",
+      "properties": {
+        "anchor": {
+          "minLength": 1,
+          "title": "Anchor",
+          "type": "string"
+        },
+        "document": {
+          "minLength": 1,
+          "title": "Document",
+          "type": "string"
+        },
+        "link": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Link"
+        },
+        "passage_id": {
+          "anyOf": [
+            {
+              "pattern": "^PAS-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Passage Id"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "document",
+        "anchor"
+      ],
+      "title": "Citation",
+      "type": "object"
+    },
+    "EpistemicOverall": {
+      "description": "DP-05: the status that travels with every claim. Computed, never set (see `epistemic`).",
+      "enum": [
+        "verified",
+        "provisional",
+        "inferred",
+        "judged",
+        "overridden",
+        "blocked"
+      ],
+      "title": "EpistemicOverall",
+      "type": "string"
+    },
+    "FactProvenance": {
+      "description": "FR-QRY-03. Where a fact value actually came from, which adds `override` to the providers.",
+      "enum": [
+        "probe",
+        "caller",
+        "inferred",
+        "derived",
+        "override"
+      ],
+      "title": "FactProvenance",
+      "type": "string"
+    },
+    "FactUsed": {
+      "additionalProperties": false,
+      "description": "A fact an answer rested on, with its provenance (FR-QRY-03).",
+      "properties": {
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "fact_type": {
+          "minLength": 1,
+          "title": "Fact Type",
+          "type": "string"
+        },
+        "probe_id": {
+          "anyOf": [
+            {
+              "pattern": "^PRB-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probe Id"
+        },
+        "source": {
+          "$ref": "#/$defs/FactProvenance"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "fact_type",
+        "source"
+      ],
+      "title": "FactUsed",
+      "type": "object"
+    },
+    "HowToObtain": {
+      "additionalProperties": false,
+      "description": "How the caller could settle a fact the tool is missing (G2, FR-QRY-01).",
+      "properties": {
+        "artefact_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artefact Kind"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProviderKind"
+        },
+        "probe_id": {
+          "anyOf": [
+            {
+              "pattern": "^PRB-[A-Za-z0-9][A-Za-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probe Id"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "HowToObtain",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "JudgementItem": {
+      "additionalProperties": false,
+      "description": "A judgement made at run time, or the override that replaced it (FR-JDG-01, G7).",
+      "properties": {
+        "citations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "outcome": {
+          "minLength": 1,
+          "title": "Outcome",
+          "type": "string"
+        },
+        "procedure_id": {
+          "pattern": "^JDG-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Procedure Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Version"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source": {
+          "default": "judged",
+          "enum": [
+            "judged",
+            "overridden"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "procedure_id",
+        "question",
+        "outcome",
+        "rationale",
+        "confidence"
+      ],
+      "title": "JudgementItem",
+      "type": "object"
+    },
+    "LimitItem": {
+      "additionalProperties": false,
+      "description": "A gap or a blocked record, carried into the response (FR-GAP-02).",
+      "properties": {
+        "effect": {
+          "minLength": 1,
+          "title": "Effect",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "effect"
+      ],
+      "title": "LimitItem",
+      "type": "object"
+    },
+    "NeededFact": {
+      "additionalProperties": false,
+      "description": "A fact that would resolve an undetermined item.",
+      "properties": {
+        "fact_type": {
+          "minLength": 1,
+          "title": "Fact Type",
+          "type": "string"
+        },
+        "how_to_obtain": {
+          "$ref": "#/$defs/HowToObtain"
+        }
+      },
+      "required": [
+        "fact_type",
+        "how_to_obtain"
+      ],
+      "title": "NeededFact",
+      "type": "object"
+    },
+    "PackageRef": {
+      "additionalProperties": false,
+      "description": "Which package answered (FR-TOO-01).",
+      "properties": {
+        "domain": {
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "ir_version": {
+          "minLength": 1,
+          "title": "Ir Version",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "pattern": "^SNAP-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Snapshot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain",
+        "ir_version",
+        "snapshot_id"
+      ],
+      "title": "PackageRef",
+      "type": "object"
+    },
+    "PolicyDecisionItem": {
+      "additionalProperties": false,
+      "description": "A policy invocation, with what it was given (FR-CFL-02, DP-10).",
+      "properties": {
+        "decision": {
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "hook": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hook"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Inputs",
+          "type": "object"
+        },
+        "policy_id": {
+          "pattern": "^POL-[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_id",
+        "decision",
+        "rationale"
+      ],
+      "title": "PolicyDecisionItem",
+      "type": "object"
+    },
+    "ProviderKind": {
+      "description": "Spec section 4. A fact type's providers, tried in this declared order (FR-TOO-04).",
+      "enum": [
+        "probe",
+        "caller",
+        "inferred",
+        "derived"
+      ],
+      "title": "ProviderKind",
+      "type": "string"
+    },
+    "StatusSummary": {
+      "additionalProperties": false,
+      "description": "Counts by state, so provisional and verified content stay distinguishable\n(FR-TOO-02).",
+      "properties": {
+        "advisory": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Advisory",
+          "type": "integer"
+        },
+        "inferred": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Inferred",
+          "type": "integer"
+        },
+        "judged": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Judged",
+          "type": "integer"
+        },
+        "overridden": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Overridden",
+          "type": "integer"
+        },
+        "provisional": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Provisional",
+          "type": "integer"
+        },
+        "verified": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Verified",
+          "type": "integer"
+        }
+      },
+      "title": "StatusSummary",
+      "type": "object"
+    },
+    "UndeterminedItem": {
+      "additionalProperties": false,
+      "description": "Something the tool could not settle, and what would settle it.\n\nThe evaluator never fills a missing fact; it says what it needs (FR-QRY-01, G2).",
+      "properties": {
+        "item": {
+          "minLength": 1,
+          "title": "Item",
+          "type": "string"
+        },
+        "needs": {
+          "items": {
+            "$ref": "#/$defs/NeededFact"
+          },
+          "minItems": 1,
+          "title": "Needs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "item",
+        "needs"
+      ],
+      "title": "UndeterminedItem",
+      "type": "object"
+    }
+  },
+  "$id": "https://formalisation.engine/schema/contract/1.0/response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Appendix E response.",
+  "properties": {
+    "advisory": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AdvisoryItem"
+      },
+      "title": "Advisory",
+      "type": "array"
+    },
+    "alternatives": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AlternativesItem"
+      },
+      "title": "Alternatives",
+      "type": "array"
+    },
+    "applies": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AppliesItem"
+      },
+      "title": "Applies",
+      "type": "array"
+    },
+    "contract_version": {
+      "default": "1.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "judgements": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/JudgementItem"
+      },
+      "title": "Judgements",
+      "type": "array"
+    },
+    "limits": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/LimitItem"
+      },
+      "title": "Limits",
+      "type": "array"
+    },
+    "note": {
+      "default": "Best-effort approximation of the sources; status is attached to every item.",
+      "title": "Note",
+      "type": "string"
+    },
+    "objective": {
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "package": {
+      "$ref": "#/$defs/PackageRef"
+    },
+    "plan": {
+      "$ref": "#/$defs/JsonValue",
+      "default": null
+    },
+    "policy_decisions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PolicyDecisionItem"
+      },
+      "title": "Policy Decisions",
+      "type": "array"
+    },
+    "status_summary": {
+      "$ref": "#/$defs/StatusSummary"
+    },
+    "undetermined": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/UndeterminedItem"
+      },
+      "title": "Undetermined",
+      "type": "array"
+    }
+  },
+  "required": [
+    "package",
+    "objective"
+  ],
+  "title": "Formalisation Engine tool response",
+  "type": "object"
+}

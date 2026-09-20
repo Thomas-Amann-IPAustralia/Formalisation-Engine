@@ -1,7 +1,7 @@
 # Status
 
 Milestone: M0 Contract and models
-Updated: 2026-09-19
+Updated: 2026-09-20
 
 ## Done recently
 - Starter kit reviewed and made runnable: `uv.lock` committed, hooks committed executable (they
@@ -11,7 +11,11 @@ Updated: 2026-09-19
   BM25, Docling local; page structure and headings as the M1 objective with
   `POL-ux-stricter-wins` and all five triage signals required; `gemini-2.5-flash` for every
   inference role and `nomic-embed-text-v1.5` self-hosted.
-- ADR-0004 Accepted: the push block goes, the rest of the Bash guard stays.
+- ADR-0004 Accepted and applied by Tom: the push block is gone from `guard-bash.sh` and
+  `settings.json`, the live-run matcher is narrowed, and `CLAUDE.md` and the `implement-req`
+  skill no longer say never push. Re-verified against the live hook after the edits: 23 of 23
+  cases behave as intended, the live-run, pip and recursive-delete rules all still fire, the
+  other twelve deny entries survive, and a plain push now succeeds.
 - Secret scan added to CI (`detect-secrets` over tracked files), which closes the NFR-SEC-01 gap.
   Verified both ways: clean on this tree, and it fails the step on a planted key.
 - uv download cache enabled in CI, keyed on `uv.lock`.
@@ -32,14 +36,6 @@ Updated: 2026-09-19
 - Nothing failing.
 
 ## Questions for Tom
-- **Five edits only you can make**, written out in full in `docs/adr/0004-no-push-block.md`:
-  remove the push rule from `guard-bash.sh`, narrow its live-LLM matcher, move the push entry from
-  deny to allow in `settings.json`, and drop "never push" from `CLAUDE.md` line 71 and from step 8
-  of the `implement-req` skill. Claude is blocked from editing its own permission files and its own
-  instructions by a harness-level check, which is working as intended. Until they are applied the
-  hook still refuses pushes and the written rules still say not to. The edits were tested on a
-  scratch copy first: the live-run, pip and recursive-delete rules all still fire, and only the
-  push rule stops. Evidence is in the ADR.
 - **Branch protection on `main`.** Removing the push block means nothing local stops a force-push
   to `main` any more. The old rule only stopped a careless one anyway. A branch protection rule in
   the GitHub settings (require a pull request, block force-pushes) is the control that actually

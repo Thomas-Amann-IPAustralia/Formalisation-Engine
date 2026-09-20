@@ -78,7 +78,7 @@ policy and triage thresholds. Known gaps, in rough priority order:
 
 - `domain_config.yaml` still has TODOs for source pins, a licence note, cost caps and the
   vocabulary seed.
-- Two edits in `docs/adr/0004-no-push-block.md` are waiting on Tom; Claude cannot make them.
+- `main` has no branch protection rule, so nothing prevents a force-push to it (ADR-0004).
 - Skills and agents are drafts, tuned after real use rather than before it.
 - The secret scan reads the working tree, not git history, so a secret committed and later
   removed would not be caught. See `docs/STATUS.md`.

@@ -1,0 +1,23 @@
+{
+  "contract_version": "1.0",
+  "objective": "page-structure",
+  "artefacts": [
+    {
+      "kind": "html",
+      "path": "./build/index.html",
+      "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+    }
+  ],
+  "facts": {
+    "audience": { "value": "general_public", "source": "caller" }
+  },
+  "overrides": {
+    "heading_describes_section": { "value": false, "source": "override", "by": "ux-designer" }
+  },
+  "options": {
+    "mode": "answer",
+    "no_inference": false,
+    "max_probe_cost": "cheap",
+    "as_at": "2026-09-18"
+  }
+}

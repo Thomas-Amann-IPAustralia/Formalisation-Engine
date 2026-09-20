@@ -1,0 +1,141 @@
+{
+  "contract_version": "1.0",
+  "package": {
+    "domain": "style-manual-wcag",
+    "ir_version": "1.3.0",
+    "snapshot_id": "SNAP-3f9a1c0b7e2d4a58"
+  },
+  "objective": "page-structure",
+  "applies": [
+    {
+      "rule_id": "RULE-heading-order",
+      "statement": "Heading levels must not be skipped.",
+      "status": "not_satisfied",
+      "state": "verified",
+      "facts_used": [
+        {
+          "fact_type": "heading_levels_skipped",
+          "value": 1,
+          "source": "probe",
+          "probe_id": "PRB-html-heading-outline",
+          "confidence": 1.0
+        }
+      ],
+      "citations": [
+        {
+          "document": "Style Manual",
+          "anchor": "headings",
+          "quote": "Do not skip heading levels.",
+          "passage_id": "PAS-0a1b2c3d4e5f6071"
+        }
+      ]
+    }
+  ],
+  "advisory": [
+    {
+      "rule_id": "RULE-heading-short",
+      "statement": "Headings should be short.",
+      "citations": [
+        {
+          "document": "Style Manual",
+          "anchor": "headings",
+          "quote": "Headings should be short.",
+          "passage_id": "PAS-0a1b2c3d4e5f6072"
+        }
+      ]
+    }
+  ],
+  "judgements": [
+    {
+      "procedure_id": "JDG-heading-describes",
+      "question": "Do the headings describe their sections?",
+      "outcome": "mostly",
+      "rationale": "Most headings name the content that follows; two are generic.",
+      "confidence": 0.7,
+      "source": "judged",
+      "model": "gemini-2.5-flash",
+      "prompt_version": 3,
+      "citations": [
+        {
+          "document": "WCAG 2.2",
+          "anchor": "headings-and-labels",
+          "quote": "Headings and labels describe topic or purpose.",
+          "passage_id": "PAS-0a1b2c3d4e5f6073"
+        }
+      ]
+    }
+  ],
+  "policy_decisions": [
+    {
+      "policy_id": "POL-ux-stricter-wins",
+      "inputs": { "impact_on_users": "high", "effort_to_fix": "low" },
+      "decision": "serve the stricter requirement",
+      "rationale": "Equal-ranked sources; impact is high and effort is low.",
+      "hook": "policy.invoked"
+    }
+  ],
+  "undetermined": [
+    {
+      "item": "RULE-heading-case",
+      "needs": [
+        {
+          "fact_type": "heading_case",
+          "how_to_obtain": {
+            "kind": "probe",
+            "probe_id": "PRB-html-heading-outline",
+            "artefact_kind": "html"
+          }
+        }
+      ]
+    }
+  ],
+  "alternatives": [
+    {
+      "question": "How long may a heading be?",
+      "options": [
+        {
+          "name": "style-manual",
+          "conditions": "where the audience is the general public",
+          "citations": [
+            {
+              "document": "Style Manual",
+              "anchor": "headings",
+              "quote": "Keep headings short.",
+              "passage_id": "PAS-0a1b2c3d4e5f6072"
+            }
+          ]
+        },
+        {
+          "name": "wcag",
+          "conditions": "where the page targets AA conformance",
+          "citations": [
+            {
+              "document": "WCAG 2.2",
+              "anchor": "headings-and-labels",
+              "quote": "Headings and labels describe topic or purpose.",
+              "passage_id": "PAS-0a1b2c3d4e5f6073"
+            }
+          ]
+        }
+      ],
+      "unresolved_because": "no policy applies"
+    }
+  ],
+  "limits": [
+    {
+      "kind": "gap",
+      "id": "GAP-heading-length-threshold",
+      "effect": "No maximum heading length is stated, so length is advisory only."
+    }
+  ],
+  "status_summary": {
+    "verified": 1,
+    "provisional": 0,
+    "inferred": 0,
+    "judged": 1,
+    "overridden": 0,
+    "advisory": 1
+  },
+  "note": "Best-effort approximation of the sources; status is attached to every item.",
+  "plan": null
+}

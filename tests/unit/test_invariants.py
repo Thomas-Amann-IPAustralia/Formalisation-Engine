@@ -39,6 +39,7 @@ from engine.models.invariants import (
     IRIndex,
     check_ir,
     check_probe_result,
+    check_record,
     check_tool_response,
 )
 from engine.models.judgement import JudgementOutputSchema
@@ -842,3 +843,48 @@ def test_a_violation_blocks_the_record_and_never_the_run() -> None:
         assert violation.record_id
         assert violation.message.endswith(".")
         assert violation.remedy
+
+
+@pytest.mark.fast
+@pytest.mark.req(
+    "INV-01",
+    "INV-02",
+    "INV-03",
+    "INV-04",
+    "INV-05",
+    "INV-06",
+    "INV-08",
+    "INV-09",
+    "INV-10",
+    "INV-11",
+)
+def test_check_record_dispatches_to_the_right_invariants() -> None:
+    """What a store calls on each write: one record in, its violations out (`models.md`)."""
+    lookup = IRIndex(valid_ir())
+    for record in (
+        document(),
+        passage(PAS_ORDER, ORDER_TEXT, "headings"),
+        proposition(PROP_ORDER, PAS_ORDER, ORDER_TEXT, ORDER_QUOTE, NormativeForce.MUST_NOT),
+        order_rule(),
+        procedure(),
+        resolved_conflict(),
+        gap(),
+        *skeleton().elements,
+    ):
+        assert check_record(record, lookup) == (), record
+
+    bad = order_rule(source_propositions=())
+    violations = check_record(bad, lookup)
+    assert [one.invariant_id for one in violations] == ["INV-02"]
+    assert violations[0].record_id == "RULE-heading-order"
+
+
+@pytest.mark.fast
+@pytest.mark.req("INV-06", "INV-07", "INV-12")
+def test_check_record_leaves_the_whole_ir_invariants_to_check_ir() -> None:
+    """The backbone count, the defeat graph and log coverage cannot be decided from one
+    record, so check_record does not pretend to."""
+    lookup = IRIndex(valid_ir())
+    backbone = document(is_backbone=True)
+    assert check_record(backbone, lookup) == ()
+    assert "INV-06" in {one.invariant_id for one in check_ir(valid_ir(documents=(backbone,)))}

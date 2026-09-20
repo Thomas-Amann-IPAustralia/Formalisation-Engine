@@ -12,7 +12,7 @@ is left here is what a single record cannot know about itself, which is most of 
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping
-from typing import Final, Protocol
+from typing import Final, Protocol, assert_never
 
 from engine.models.base import IRModel
 from engine.models.conflict import Conflict, Gap
@@ -880,6 +880,51 @@ def _override_wins(ir: IR, target_id: str, override_id: str) -> Iterator[Violati
                 "An override beats an automated decision on an unchanged record. Set the "
                 "conflict's status to overridden (FR-CFL-04, DP-08).",
             )
+
+
+#: Every record kind an invariant runs over. `engine.stores` checks one of these on each write.
+CheckableRecord = (
+    Document
+    | Passage
+    | Proposition
+    | SkeletonElement
+    | Rule
+    | JudgementProcedure
+    | Conflict
+    | Gap
+    | ProbeResult
+    | ToolResponse
+)
+
+
+def check_record(record: CheckableRecord, lookup: IRLookup) -> tuple[Violation, ...]:
+    """Every invariant that applies to one record (`models.md`: checked on every IR write).
+
+    Returns violations; never raises (DP-04). Whole-IR invariants — the backbone count, the
+    defeat graph and decision log coverage — cannot be decided from one record and are in
+    `check_ir`.
+    """
+    if isinstance(record, Document):
+        return tuple(check_document(record, lookup))
+    if isinstance(record, Passage):
+        return tuple(check_passage(record, lookup))
+    if isinstance(record, Proposition):
+        return tuple(check_proposition(record, lookup))
+    if isinstance(record, SkeletonElement):
+        return tuple(check_element(record, lookup))
+    if isinstance(record, Rule):
+        return tuple(check_rule(record, lookup))
+    if isinstance(record, JudgementProcedure):
+        return tuple(check_judgement_procedure(record, lookup))
+    if isinstance(record, Conflict):
+        return tuple(check_conflict(record, lookup))
+    if isinstance(record, Gap):
+        return tuple(check_gap(record, lookup))
+    if isinstance(record, ProbeResult):
+        return tuple(check_probe_result(record, lookup))
+    if isinstance(record, ToolResponse):
+        return tuple(check_tool_response(record, lookup))
+    assert_never(record)
 
 
 def check_ir(ir: IR) -> tuple[Violation, ...]:

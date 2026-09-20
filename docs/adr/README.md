@@ -7,6 +7,7 @@
 | 0003 | [Models by role](0003-models-by-role.md) | Accepted 2026-09-18 |
 | 0004 | [Remove the push block; keep the rest of the Bash guard](0004-no-push-block.md) | Accepted 2026-09-19 |
 | 0005 | [IR model decisions the spec leaves open](0005-ir-model-decisions.md) | Proposed 2026-09-20 |
+| 0006 | [Gold after the pilot: full once, acceptance set thereafter](0006-gold-per-domain.md) | Proposed 2026-09-20 |
 
 Add one file per decision from `0000-template.md`. Only Tom sets a status to Accepted.
 

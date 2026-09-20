@@ -128,8 +128,11 @@ def test_content_id_changes_when_the_content_changes() -> None:
 @pytest.mark.fast
 @pytest.mark.req("NFR-INT-01")
 def test_content_id_does_not_confuse_part_boundaries() -> None:
-    """Joining on the unit separator keeps ('ab', 'c') distinct from ('a', 'bc')."""
+    """Length framing keeps ('ab', 'c') distinct from ('a', 'bc'), and survives a part that
+    contains the framing characters or a separator an attacker might try (G6)."""
     assert content_id(IdKind.PASSAGE, "ab", "c") != content_id(IdKind.PASSAGE, "a", "bc")
+    assert content_id(IdKind.PASSAGE, "1:a", "b") != content_id(IdKind.PASSAGE, "1:ab")
+    assert content_id(IdKind.PASSAGE, "a\x1fb") != content_id(IdKind.PASSAGE, "a", "b")
 
 
 @pytest.mark.fast

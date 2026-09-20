@@ -117,17 +117,21 @@ def make_id(kind: IdKind, suffix: str) -> str:
 def content_id(kind: IdKind, *parts: str) -> str:
     """Build a content-hash identifier, so the same content yields the same identifier.
 
-    Each part is normalised to Unicode NFC and joined with the unit separator before hashing,
-    so the separator can never appear inside a part and change what a boundary means.
+    Each part is normalised to Unicode NFC and length-framed before hashing: the digest covers
+    each part's byte length as well as its bytes. Framing rather than a separator means no
+    source text, however adversarial, can shift a boundary and collide with other content.
     """
     if not parts:
         raise ValueError(
             f"content_id({kind.value}) needs at least one part to hash. Pass the fields that "
             f"identify the record, in a fixed order."
         )
-    canonical = "\x1f".join(unicodedata.normalize("NFC", part) for part in parts)
-    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:CONTENT_HASH_LENGTH]
-    return f"{kind.value}-{digest}"
+    digest = hashlib.sha256()
+    for part in parts:
+        encoded = unicodedata.normalize("NFC", part).encode("utf-8")
+        digest.update(f"{len(encoded)}:".encode("ascii"))
+        digest.update(encoded)
+    return f"{kind.value}-{digest.hexdigest()[:CONTENT_HASH_LENGTH]}"
 
 
 def to_iri(identifier: str) -> str:

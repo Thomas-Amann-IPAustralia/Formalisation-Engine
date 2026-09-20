@@ -68,7 +68,8 @@ judgement and override logged with inputs; overrides beat automation on unchange
 ## Method
 
 - `/implement-req <ID ...>` per requirement group; test first with `@pytest.mark.req`; quick tests
-  also `@pytest.mark.fast`; spec-auditor checks the diff; commit with IDs first; never push.
+  also `@pytest.mark.fast`; spec-auditor checks the diff; commit with IDs first; push to the
+  working branch, never to `main` (ADR-0004).
 - `/wrap-up` ends a session. Open points go under "Questions for Tom" in docs/STATUS.md.
 - Python 3.12, mypy strict, ruff, Pydantic v2. ISO 8601, UTF-8, atomic writes, JSON-lines logs with
   run, stage and record IDs. Errors name the record, the stage and what to do. Australian English.

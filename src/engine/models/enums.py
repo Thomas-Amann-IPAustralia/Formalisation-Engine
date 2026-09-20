@@ -456,5 +456,32 @@ class ToolSurface(StrEnum):
     CLI = "cli"
 
 
+class ConflictStatus(StrEnum):
+    """Where a conflict has got to (spec section 4)."""
+
+    OPEN = "open"
+    RESOLVED = "resolved"
+    ALTERNATIVES = "alternatives"
+    OVERRIDDEN = "overridden"
+
+
+class GapStatus(StrEnum):
+    """Where a gap has got to. A spent budget leaves it unresolved (FR-GAP-01)."""
+
+    OPEN = "open"
+    RESOLVED = "resolved"
+    BUDGET_EXHAUSTED = "budget_exhausted"
+
+
+class PolicyInputSource(StrEnum):
+    """Where a policy gets one of its inputs (`inputs_from` in decision_policy.yaml)."""
+
+    CALLER = "caller"
+    JUDGEMENT = "judgement"
+    PROBE = "probe"
+    INFERRED = "inferred"
+    DERIVED = "derived"
+
+
 #: INV-03: every decision carries this outcome, with an edge.
 UNABLE_TO_DETERMINE: Final = "unable_to_determine"

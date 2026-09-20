@@ -114,10 +114,19 @@ both a unit test and CI run it.
 The IR and the response are generated in serialisation mode so that the computed `overall`
 appears; the request in validation mode, because that is what a caller constructs.
 
-One field is added to Appendix E: `Citation.passage_id`, optional. INV-10 requires every
-assertion's citation to *resolve to a passage*, and `document` plus `anchor` is how a person
-reads a citation, not how a machine resolves one. It is optional and additive, so an existing
-consumer is unaffected — "add content, never change shape".
+Two changes to Appendix E, both of which Tom should confirm.
+
+The first is additive: `Citation.passage_id`, optional. INV-10 requires every assertion's
+citation to *resolve to a passage*, and `document` plus `anchor` is how a person reads a
+citation, not how a machine resolves one. Optional, so an existing consumer is unaffected —
+"add content, never change shape".
+
+The second is a tightening, and it makes the appendix's own printed sample invalid: an
+`alternatives` entry must carry at least two options. One option is not an alternative, it is a
+choice, and FR-CFL-03 and DP-10 both say nothing is silently chosen. The sample shows one, in
+the same abbreviated way it shows `"citations": []` on entries INV-10 requires to be cited. The
+two readings stand or fall together: either the sample is illustrative, or both constraints are
+wrong.
 
 `ToolResponse.plan` is left untyped. Appendix E shows `null` and FR-TOO-04 says the tool honours
 `mode: plan`, but neither says what a plan contains, and inventing a structure for it is not a
@@ -133,6 +142,20 @@ DP-04 requires never to stop the run. A property test cross-checks it against Ka
 INV-03 is read as covering both decision-point elements and judgement procedures. Both are
 decisions the facts may fail to settle, and a procedure that cannot decline will invent an
 answer.
+
+### What this stage deliberately does not check
+
+INV-12's second clause, "an override beats an automated decision **on an unchanged record**",
+is implemented only as far as the first half: an override on a conflict still standing as
+resolved by policy is a violation. The "unchanged" qualifier is not checked, and
+`Override.target_record_hash` is written and never read.
+
+That is not an oversight to tidy up later without thinking, because what to hash is a real
+decision. Hashing the whole record is circular: applying an override changes the record's
+status, so the stored hash could never match again. The hash has to cover a record's
+substantive content and exclude its review and triage state, and where that line falls is
+FR-TRI-02's question ("a changed record returns to the queue with a diff"), which is M4. Left
+for M4 rather than guessed at here.
 
 ## Consequences
 

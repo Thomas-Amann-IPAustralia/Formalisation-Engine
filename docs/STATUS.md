@@ -11,6 +11,9 @@ Updated: 2026-09-20
   exits non-zero, and both a unit test and CI run that.
 - M0 coverage: INV-01 to INV-12 and NFR-INT-01 passing, NFR-MNT-01 evidence-needed.
 - ADR-0005 (Proposed) records the eight points where the spec is silent and this stage chose.
+- The spec-auditor pass found three real gaps, all fixed: INV-12 never checked judgements,
+  it accepted an input-less log entry if a sibling entry had inputs, and one Appendix E
+  tightening was unrecorded.
 
 ## In progress
 - Nothing. The branch is clean and pushed.
@@ -20,6 +23,15 @@ Updated: 2026-09-20
   bad field, with the FTS5 startup check from ADR-0001.
 - The gold slice (FR-EVL-01). The models validate it; `gold/` is yours to write.
 - `engine.stores`, which implements the `IRLookup` protocol the invariant checks take.
+
+## Coverage that is narrower than it reads
+- `coverage` counts a requirement passing as soon as one test claims it. Three claims here are
+  partial: **NFR-INT-01** (schemas, ISO 8601, UTF-8 and IRIs are done; "usable as a LangGraph
+  tool, MCP exposes the same operations" needs the package, M1/M5), **FR-EPI-01** (the `overall`
+  function only, not propagation, M4) and **NFR-PRT-01** (the `extensions` point only, not the
+  provider abstraction, M2). **INV-12** checks that policy invocations, judgements and overrides
+  reach the log with their inputs, and that an override beats a policy resolution, but not the
+  "on an unchanged record" qualifier; ADR-0005 says why that waits for M4.
 
 ## Blocked or failing
 - Nothing failing.

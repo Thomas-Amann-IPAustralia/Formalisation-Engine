@@ -38,6 +38,7 @@ from engine.models.judgement import (
     Consideration,
     JudgementOutputSchema,
     JudgementProcedure,
+    JudgementRecord,
 )
 from engine.models.policy import AuthorityLevel, AuthorityProfile
 from engine.models.proposition import Proposition, Span
@@ -260,6 +261,39 @@ def procedure(**changes: Any) -> JudgementProcedure:
     )
 
 
+def judgement_record(**changes: Any) -> JudgementRecord:
+    return JudgementRecord(
+        **{
+            "procedure_id": "JDG-heading-describes",
+            "outcome": "mostly",
+            "rationale": "Most headings name the content that follows; two are generic.",
+            "confidence": 0.7,
+            "model": "gemini-2.5-flash",
+            "prompt_version": 1,
+            "inputs": {"artefact_sha256": "0" * 64},
+            "decided_at": NOW,
+            **changes,
+        }
+    )
+
+
+def judgement_log_entry(**changes: Any) -> DecisionLogEntry:
+    return DecisionLogEntry(
+        **{
+            "entry_id": "DEC-0a1b2c3d4e5f6073",
+            "recorded_at": NOW,
+            "kind": DecisionKind.JUDGEMENT,
+            "subject_id": "JDG-heading-describes",
+            "procedure_id": "JDG-heading-describes",
+            "inputs": {"artefact_sha256": "0" * 64},
+            "decision": "mostly",
+            "rationale": "Most headings name the content that follows; two are generic.",
+            "decided_by": "gemini-2.5-flash",
+            **changes,
+        }
+    )
+
+
 def gap(**changes: Any) -> Gap:
     return Gap(
         **{
@@ -342,10 +376,11 @@ def valid_ir(**changes: Any) -> IR:
             "probes": (probe(),),
             "rules": (order_rule(), short_rule()),
             "judgement_procedures": (procedure(),),
+            "judgement_records": (judgement_record(),),
             "conflicts": (resolved_conflict(),),
             "gaps": (gap(),),
             "authority_profile": authority_profile(),
-            "decision_log": (policy_log_entry(),),
+            "decision_log": (policy_log_entry(), judgement_log_entry()),
             **changes,
         }
     )

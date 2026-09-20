@@ -17,7 +17,7 @@ from engine.models.conflict import Conflict, Gap
 from engine.models.decision_log import DecisionLogEntry
 from engine.models.enums import ReconstructionMode
 from engine.models.facts import FactType, Probe
-from engine.models.judgement import JudgementProcedure
+from engine.models.judgement import JudgementProcedure, JudgementRecord
 from engine.models.policy import AuthorityProfile, DecisionPolicy
 from engine.models.proposition import Proposition
 from engine.models.relations import PropositionElementRelation, PropositionPropositionRelation
@@ -56,6 +56,8 @@ class IR(ExtensibleModel):
     probes: tuple[Probe, ...] = ()
     rules: tuple[Rule, ...] = ()
     judgement_procedures: tuple[JudgementProcedure, ...] = ()
+    judgement_records: tuple[JudgementRecord, ...] = ()
+    """Judgements actually made. INV-12 checks each one reached the decision log."""
     conflicts: tuple[Conflict, ...] = ()
     gaps: tuple[Gap, ...] = ()
     policies: tuple[DecisionPolicy, ...] = ()

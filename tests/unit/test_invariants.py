@@ -58,6 +58,7 @@ from tests.unit.ir_builders import (
     document,
     fact_type,
     gap,
+    judgement_log_entry,
     order_rule,
     passage,
     policy_log_entry,
@@ -782,7 +783,8 @@ def test_inv_12_an_override_beats_an_automated_decision() -> None:
         }
     )
     still_resolved = valid_ir(
-        overrides=(override,), decision_log=(policy_log_entry(), override_entry)
+        overrides=(override,),
+        decision_log=(policy_log_entry(), judgement_log_entry(), override_entry),
     )
     violations = [one for one in check_ir(still_resolved) if one.invariant_id == "INV-12"]
     assert violations and "still stands as resolved by policy" in violations[0].message
@@ -790,7 +792,7 @@ def test_inv_12_an_override_beats_an_automated_decision() -> None:
     overridden = valid_ir(
         overrides=(override,),
         conflicts=(resolved_conflict(status=ConflictStatus.OVERRIDDEN),),
-        decision_log=(policy_log_entry(), override_entry),
+        decision_log=(policy_log_entry(), judgement_log_entry(), override_entry),
     )
     assert "INV-12" not in {one.invariant_id for one in check_ir(overridden)}
 
@@ -803,7 +805,10 @@ def test_inv_12_an_unresolved_conflict_needs_no_log_entry() -> None:
         resolution=Resolution(decided_by=DecidedBy.UNRESOLVED), status=ConflictStatus.OPEN
     )
     assert "INV-12" not in {
-        one.invariant_id for one in check_ir(valid_ir(conflicts=(unresolved,), decision_log=()))
+        one.invariant_id
+        for one in check_ir(
+            valid_ir(conflicts=(unresolved,), decision_log=(judgement_log_entry(),))
+        )
     }
 
 
@@ -888,3 +893,39 @@ def test_check_record_leaves_the_whole_ir_invariants_to_check_ir() -> None:
     backbone = document(is_backbone=True)
     assert check_record(backbone, lookup) == ()
     assert "INV-06" in {one.invariant_id for one in check_ir(valid_ir(documents=(backbone,)))}
+
+
+@pytest.mark.fast
+@pytest.mark.req("INV-12")
+def test_inv_12_a_judgement_must_be_in_the_decision_log() -> None:
+    """INV-12 names three things: policy invocations, judgements and overrides."""
+    violations = [
+        one
+        for one in check_ir(valid_ir(decision_log=(policy_log_entry(),)))
+        if one.invariant_id == "INV-12"
+    ]
+    assert len(violations) == 1
+    assert violations[0].record_kind == "judgement"
+    assert "is not in the decision log" in violations[0].message
+
+
+@pytest.mark.fast
+@pytest.mark.req("INV-12")
+def test_inv_12_every_logged_entry_carries_its_own_inputs() -> None:
+    """A second entry for the same subject that does carry inputs does not excuse the first."""
+    violations = [
+        one
+        for one in check_ir(
+            valid_ir(
+                decision_log=(
+                    policy_log_entry(entry_id="DEC-0a1b2c3d4e5f6074", inputs={}),
+                    policy_log_entry(),
+                    judgement_log_entry(),
+                )
+            )
+        )
+        if one.invariant_id == "INV-12"
+    ]
+    assert len(violations) == 1
+    assert "DEC-0a1b2c3d4e5f6074" in violations[0].message
+    assert "without its inputs" in violations[0].message

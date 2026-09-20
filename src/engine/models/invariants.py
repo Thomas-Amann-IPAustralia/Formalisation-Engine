@@ -822,6 +822,14 @@ def check_decision_log(ir: IR) -> Iterator[Violation]:
             what=f"policy {conflict.resolution.policy_id} resolving conflict "
             f"{conflict.conflict_id}",
         )
+    for judgement in ir.judgement_records:
+        yield from _logged(
+            entries,
+            kind=DecisionKind.JUDGEMENT,
+            subject_id=judgement.procedure_id,
+            record_kind="judgement",
+            what=f"the judgement {judgement.outcome!r} from procedure {judgement.procedure_id}",
+        )
     for override in ir.overrides:
         yield from _logged(
             entries,
@@ -852,14 +860,17 @@ def _logged(
             "made (FR-CFL-02, FR-TOO-05).",
         )
         return
-    if not any(entry.inputs for entry in matching):
+    for entry in matching:
+        if entry.inputs:
+            continue
         yield _violation(
             "INV-12",
             record_kind,
             subject_id,
-            f"{what} is logged without its inputs.",
-            "INV-12 wants the inputs, so the decision can be re-made and audited, not only "
-            "that a decision happened.",
+            f"{what} is logged by entry {entry.entry_id} without its inputs.",
+            "INV-12 wants the inputs on the entry that records the decision, so it can be "
+            "re-made and audited. Another entry for the same subject carrying inputs does "
+            "not cover this one.",
         )
 
 

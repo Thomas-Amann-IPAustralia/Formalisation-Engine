@@ -97,9 +97,15 @@ class Rule(ExtensibleModel):
     source_propositions: tuple[PropositionId, ...] = ()
     """INV-02: every rule has a source proposition. INV-04 checks what force it came from."""
     advisory: bool = False
-    """SHOULD and SHOULD_NOT compile to advisory notes, not executable obligations (G3)."""
+    """Whether this is guidance rather than an obligation. SHOULD and SHOULD_NOT compile here,
+    and INV-04 refuses any other force. This is the flag that keeps guidance out of `applies`
+    (G3); `executability` below is a different question and must not be read as this one."""
     temporal: TemporalClaim = Field(default_factory=TemporalClaim)
     executability: Executability = Executability.EXECUTABLE
+    """Whether the rule is live or held back, which is about freshness, not about force: a rule
+    freezes on an unresolved gap, an unresolved condition or a blocked source (FR-CMP-02). An
+    advisory note is normally `executable`, meaning nothing is holding it back; it still
+    answers as advisory, because `advisory` decides that."""
     frozen_reason: str | None = None
     epistemic: EpistemicStatus = Field(default_factory=EpistemicStatus)
 

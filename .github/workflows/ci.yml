@@ -17,6 +17,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: astral-sh/setup-uv@v6
+        with:
+          # Caches uv's download cache, keyed on uv.lock. Only a lock change re-downloads.
+          enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Install
         run: uv sync --locked
@@ -37,6 +41,23 @@ jobs:
 
       - name: Requirement coverage summary
         run: python3 scripts/spec_tools.py coverage --summary >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Secret scan
+        run: |
+          uvx detect-secrets scan > "$RUNNER_TEMP/secrets.json"
+          python3 - "$RUNNER_TEMP/secrets.json" <<'PYEOF'
+          import json, sys
+          results = json.load(open(sys.argv[1]))["results"]
+          for path, findings in sorted(results.items()):
+              for f in findings:
+                  print(f"{path}:{f['line_number']}: possible {f['type']}")
+          if results:
+              print("\nIf one of these is a false positive, add a baseline:")
+              print("  uvx detect-secrets scan > .secrets.baseline")
+              print("  uvx detect-secrets audit .secrets.baseline")
+              sys.exit(1)
+          print("No secrets detected in tracked files.")
+          PYEOF
 
       - name: Dependency audit
         run: |

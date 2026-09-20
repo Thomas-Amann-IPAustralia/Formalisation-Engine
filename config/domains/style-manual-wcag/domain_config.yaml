@@ -6,7 +6,9 @@ reconstruction_mode: framework   # backbone | framework
 consuming_agent: ux-designer
 
 objectives:
-  active: ["page-structure"]     # M1 thin slice (OQ-01); widen after the contract holds
+  active: ["page-structure"]     # M1 thin slice, confirmed in ADR-0002; widen once the
+                                 # contract holds. Chosen because it has both cheap probes
+                                 # and a real judgement point (EL-heading-describes).
 
 corpus:
   snapshot_path: snapshots/style-manual-wcag/TODO
@@ -64,7 +66,10 @@ tool:
     judgement_cost_cap_per_package_day: TODO
     decision_log_sink: var/decision-log/style-manual-wcag.jsonl
 
-triage:                          # FR-TRI-01, OQ-02
+triage:                          # FR-TRI-01; thresholds confirmed in ADR-0002
+  # Auto-approve only when every signal below is good. Anything less is queued, and a
+  # queued record still compiles and is served as provisional, so a large queue costs
+  # review attention, never availability. Tuned against gold in M4 (OQ-02).
   auto_approve:
     extraction_confidence: high
     interpretation_confidence: high
@@ -77,14 +82,18 @@ triage:                          # FR-TRI-01, OQ-02
     - low_confidence_on_active_objective
   vocabulary_confirm_threshold: 0.9
 
+# Model IDs by role (ADR-0003). One model for every inference role to start with; move a
+# single role to a bigger model if it misses its gold target, rather than moving all of them.
 models:
-  extraction: TODO
-  classification: TODO
-  panel: [TODO, TODO]
-  critic: TODO
-  judgement: TODO                # OQ-03
-  inference: TODO
-  embedding: TODO                # ADR-0003
+  extraction: gemini-2.5-flash
+  classification: gemini-2.5-flash
+  # One model, three different prompts. Measure the disagreement rate on gold in M4; if the
+  # members agree almost always, the panel is not doing its job and needs a second family.
+  panel: [gemini-2.5-flash, gemini-2.5-flash, gemini-2.5-flash]
+  critic: gemini-2.5-flash
+  judgement: gemini-2.5-flash
+  inference: gemini-2.5-flash
+  embedding: nomic-ai/nomic-embed-text-v1.5    # self-hosted; 768 dims
 
 llm:
   default_mode: replay

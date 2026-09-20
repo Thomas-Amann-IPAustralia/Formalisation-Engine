@@ -17,5 +17,5 @@ Implement $ARGUMENTS.
 5. Implement the smallest change that passes. Do not implement neighbouring requirements.
 6. `uv run pytest -x -q --tb=short`, `uv run ruff check .`, `uv run mypy src` until clean.
 7. Ask the spec-auditor subagent to review the diff against $ARGUMENTS; fix every FAIL and PARTIAL.
-8. Commit with the IDs first. Do not push.
+8. Commit with the IDs first. Push to the working branch; never to `main` (ADR-0004).
 9. Report in five lines: IDs done, tests added, deferred, questions for Tom.

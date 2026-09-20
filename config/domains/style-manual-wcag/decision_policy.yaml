@@ -1,4 +1,4 @@
-# Decision policies (spec 4, FR-CFL-02, DP-10). Draft for M0 (OQ-01).
+# Decision policies (spec 4, FR-CFL-02, DP-10). Confirmed in ADR-0002; tuned on gold in M4.
 # Every invocation is written to the decision log with policy, inputs, decision and rationale.
 schema_version: "1.0"
 policies:

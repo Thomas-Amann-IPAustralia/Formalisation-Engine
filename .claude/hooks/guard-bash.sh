@@ -13,12 +13,8 @@ block() {
   exit 2
 }
 
-if grep -Eq 'ENGINE_ALLOW_LIVE_LLM|ENGINE_LLM_MODE=(live|record)|--llm-mode[= ]+(live|record)' <<<"$cmd"; then
+if grep -Eq '(^|[;&|(]|[[:space:]])(export[[:space:]]+)?(ENGINE_ALLOW_LIVE_LLM=|ENGINE_LLM_MODE=(live|record))|--llm-mode[= ]+(live|record)' <<<"$cmd"; then
   block "live and record LLM runs are Tom's to start, because they cost money and change recorded fixtures. Use replay mode, or ask Tom to run it."
-fi
-
-if grep -Eq '(^|[;&|[:space:](])git[[:space:]]+push([[:space:]]|$)' <<<"$cmd"; then
-  block "pushing is Tom's call. Commit locally and say what is ready."
 fi
 
 if grep -Eq '(^|[;&|[:space:](])pip3?[[:space:]]+install|-m[[:space:]]+pip[[:space:]]+install' <<<"$cmd"; then

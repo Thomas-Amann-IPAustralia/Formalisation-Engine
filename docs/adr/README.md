@@ -6,6 +6,7 @@
 | 0002 | [Pilot choices: first topic, tie-breaking rule, and what gets reviewed](0002-pilot-choices.md) | Accepted 2026-09-18 |
 | 0003 | [Models by role](0003-models-by-role.md) | Accepted 2026-09-18 |
 | 0004 | [Remove the push block; keep the rest of the Bash guard](0004-no-push-block.md) | Accepted 2026-09-19 |
+| 0005 | [IR model decisions the spec leaves open](0005-ir-model-decisions.md) | Accepted 2026-09-23 |
 | 0005 | [IR model decisions the spec leaves open](0005-ir-model-decisions.md) | Proposed 2026-09-20 |
 
 Add one file per decision from `0000-template.md`. Only Tom sets a status to Accepted.

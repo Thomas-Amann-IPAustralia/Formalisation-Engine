@@ -10,7 +10,8 @@ Updated: 2026-09-20
 - `schema/` is generated and committed by `uv run engine schema export`; `--check` diffs it and
   exits non-zero, and both a unit test and CI run that.
 - M0 coverage: INV-01 to INV-12 and NFR-INT-01 passing, NFR-MNT-01 evidence-needed.
-- ADR-0005 (Proposed) records the eight points where the spec is silent and this stage chose.
+- ADR-0005 (Accepted 2026-09-23 by Tom) records the eight points where the spec is silent and
+  this stage chose.
 - The spec-auditor pass found three real gaps, all fixed: INV-12 never checked judgements,
   it accepted an input-less log entry if a sibling entry had inputs, and one Appendix E
   tightening was unrecorded.
@@ -37,10 +38,6 @@ Updated: 2026-09-20
 - Nothing failing.
 
 ## Questions for Tom
-- **ADR-0005 needs a status.** Each decision sits behind one constant, function or field, so
-  changing any is small. Two worth a look: the `overall` truth table, and one additive optional
-  field on Appendix E (`Citation.passage_id`) without which INV-10's "resolves to a passage"
-  cannot be checked.
 - **Three spellings for "could not decide".** INV-03 says `unable_to_determine`,
   `POL-ux-conservative-default` says `undetermined`, FR-QRY-01 and FR-PRB-01 say UNKNOWN. I
   implemented INV-03's spelling and left the config alone. The first two should converge.

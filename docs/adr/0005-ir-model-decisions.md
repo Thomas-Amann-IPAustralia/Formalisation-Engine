@@ -1,6 +1,6 @@
 # 0005. IR model decisions the spec leaves open
 
-- Status: Proposed
+- Status: Accepted (2026-09-23, Tom)
 - Date: 2026-09-20
 - Related: NFR-INT-01, NFR-MNT-01, NFR-PRT-01, INV-01 to INV-12, FR-EPI-01, FR-TOO-02, DP-11
 
